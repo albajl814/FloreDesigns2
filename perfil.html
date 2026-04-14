@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Floré Designs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .perfil-grid { display: grid; grid-template-columns: 280px 1fr; gap: 2rem; max-width: 1100px; margin: 3rem auto; padding: 0 2rem; }
+        .perfil-sidebar { display: flex; flex-direction: column; gap: 1rem; }
+        .perfil-nav-item { display: flex; align-items: center; gap: .75rem; padding: .85rem 1.2rem; border-radius: 10px; cursor: pointer; font-size: .9rem; font-weight: 500; color: var(--text-medium); transition: all .2s; border: none; background: none; width: 100%; text-align: left; }
+        .perfil-nav-item:hover { background: var(--bg-accent, #f5f0e8); color: var(--primary-color); }
+        .perfil-nav-item.active { background: var(--primary-color); color: #C9A961; }
+        .perfil-card { background: white; border-radius: 16px; box-shadow: 0 2px 16px rgba(0,0,0,.08); padding: 2rem; }
+        .perfil-panel { display: none; }
+        .perfil-panel.active { display: block; }
+        .campo-grupo { margin-bottom: 1.25rem; }
+        .campo-grupo label { display: block; font-size: .8rem; font-weight: 600; color: var(--text-medium); margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .06em; }
+        .campo-grupo input { width: 100%; padding: .75rem 1rem; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: .9rem; outline: none; transition: border-color .2s; box-sizing: border-box; }
+        .campo-grupo input:focus { border-color: var(--primary-color); }
+        .campo-grupo input:disabled { background: #f9f9f9; color: #999; cursor: not-allowed; }
+        .btn-perfil { padding: .75rem 1.8rem; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: .875rem; transition: opacity .2s; }
+        .btn-perfil.primario { background: var(--primary-color); color: #C9A961; }
+        .btn-perfil.primario:hover { opacity: .85; }
+        .btn-perfil.peligro { background: #fff0f0; color: #c62828; border: 1px solid #f5c6c6; }
+        .btn-perfil.peligro:hover { background: #fee; }
+        .btn-perfil:disabled { opacity: .5; cursor: not-allowed; }
+        .sesion-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-radius: 10px; border: 1.5px solid #e8e8e8; margin-bottom: .75rem; transition: border-color .2s; }
+        .sesion-item.esta-sesion { border-color: var(--primary-color); background: #f8f6f0; }
+        .sesion-icono { width: 44px; height: 44px; border-radius: 10px; background: var(--bg-accent, #f5f0e8); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; }
+        .badge-activa { font-size: .7rem; background: #e8f5e9; color: #2e7d32; padding: 2px 8px; border-radius: 20px; font-weight: 600; }
+        .toggle-switch { position: relative; width: 48px; height: 26px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; inset: 0; background: #ccc; border-radius: 26px; cursor: pointer; transition: .3s; }
+        .toggle-slider:before { content: ''; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .3s; }
+        .toggle-switch input:checked + .toggle-slider { background: var(--primary-color, #1a1a2e); }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(22px); }
+        .avatar-circulo { width: 80px; height: 80px; border-radius: 50%; background: var(--primary-color); display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 2rem; color: #C9A961; margin: 0 auto 1rem; }
+        .perfil-toast { display: none; padding: .7rem 1.2rem; border-radius: 8px; font-size: .85rem; font-weight: 500; margin-top: 1rem; }
+        .perfil-toast.exito { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .perfil-toast.error { background: #fff5f5; color: #c62828; border: 1px solid #ffcdd2; }
+        @media (max-width: 768px) { .perfil-grid { grid-template-columns: 1fr; } .perfil-sidebar { flex-direction: row; flex-wrap: wrap; } .perfil-nav-item { flex: 1; min-width: 120px; justify-content: center; } }
+    </style>
+</head>
+<body>
+
+<!-- Encabezado -->
+<header>
+    <nav class="menu">
+        <h1 class="logo"><a href="index.html">Floré Designs</a></h1>
+        <ul class="menu-principal">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="citas.html">Citas</a></li>
+            <li class="submenu perfil-menu">
+                <a href="perfil.html" style="color: var(--secondary-color);">
+                    <span id="menu-nombre-usuario">Mi Perfil</span>
+                    <span class="dropdown-icon">▼</span>
+                </a>
+                <ul class="menu-secundario">
+                    <li class="admin-menu-item" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                    <li><a href="#" onclick="auth.logout(); return false;">Cerrar sesión</a></li>
+                </ul>
+            </li>
+            <li>
+                <button class="btn-dark-mode" onclick="DarkModeModule.toggle()" title="Cambiar tema">
+                    <span class="texto-tema">Modo oscuro</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div class="perfil-grid">
+
+    <!-- Sidebar de navegación -->
+    <aside class="perfil-sidebar">
+        <!-- Tarjeta de usuario -->
+        <div class="perfil-card" style="text-align:center;padding:1.5rem;">
+            <div class="avatar-circulo" id="perfil-avatar">?</div>
+            <h3 id="perfil-nombre-sidebar" style="font-family:var(--font-heading);font-size:1.4rem;color:var(--primary-color);margin-bottom:.25rem;">Cargando...</h3>
+            <p id="perfil-rol-sidebar" style="font-size:.78rem;color:#999;text-transform:uppercase;letter-spacing:.08em;font-weight:600;"></p>
+        </div>
+
+        <!-- Menú -->
+        <div class="perfil-card" style="padding:.75rem;">
+            <button class="perfil-nav-item active" onclick="mostrarPanel('datos', this)">Mis datos</button>
+            <button class="perfil-nav-item" onclick="mostrarPanel('seguridad', this)">Seguridad y contraseña</button>
+            <button class="perfil-nav-item" onclick="mostrarPanel('sesiones', this)">Sesiones activas</button>
+            <button class="perfil-nav-item" onclick="mostrarPanel('preferencias', this)">Preferencias</button>
+            <button class="perfil-nav-item" style="color:#c62828;" onclick="auth.logout()">Cerrar sesión</button>
+        </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main>
+
+        <!-- Panel: Mis datos -->
+        <div id="panel-datos" class="perfil-panel active">
+            <div class="perfil-card">
+                <h2 style="font-family:var(--font-heading);font-size:1.75rem;color:var(--primary-color);margin-bottom:.5rem;">Mis datos</h2>
+                <p style="color:var(--text-medium);font-size:.875rem;margin-bottom:2rem;">Actualiza tu información personal.</p>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                    <div class="campo-grupo" style="grid-column:1/-1;">
+                        <label>Nombre completo</label>
+                        <input type="text" id="perfil-nombre" placeholder="Tu nombre completo">
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Correo electrónico</label>
+                        <input type="email" id="perfil-email" disabled>
+                    </div>
+                    <div class="campo-grupo">
+                        <label>Teléfono</label>
+                        <input type="tel" id="perfil-telefono" placeholder="(449) 123-4567">
+                    </div>
+                </div>
+
+                <div id="datos-toast" class="perfil-toast"></div>
+
+                <div style="display:flex;gap:1rem;margin-top:1.5rem;">
+                    <button class="btn-perfil primario" onclick="guardarDatos()">Guardar cambios</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panel: Seguridad -->
+        <div id="panel-seguridad" class="perfil-panel">
+            <div class="perfil-card" style="margin-bottom:1.5rem;">
+                <h2 style="font-family:var(--font-heading);font-size:1.75rem;color:var(--primary-color);margin-bottom:.5rem;">Cambiar contraseña</h2>
+                <p style="color:var(--text-medium);font-size:.875rem;margin-bottom:2rem;">Usa al menos 8 caracteres, una mayúscula y un número.</p>
+
+                <div class="campo-grupo">
+                    <label>Contraseña actual</label>
+                    <input type="password" id="pwd-actual" placeholder="Tu contraseña actual">
+                </div>
+                <div class="campo-grupo">
+                    <label>Nueva contraseña</label>
+                    <input type="password" id="pwd-nueva" placeholder="Nueva contraseña">
+                </div>
+                <div class="campo-grupo">
+                    <label>Confirmar nueva contraseña</label>
+                    <input type="password" id="pwd-confirmar" placeholder="Repite la nueva contraseña">
+                </div>
+
+                <div id="pwd-toast" class="perfil-toast"></div>
+                <button class="btn-perfil primario" onclick="cambiarPassword()" style="margin-top:1rem;">Actualizar contraseña</button>
+            </div>
+
+            <!-- MFA -->
+            <div class="perfil-card">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;">
+                    <div>
+                        <h3 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--primary-color);margin-bottom:.3rem;">Verificación en dos pasos (MFA)</h3>
+                        <p id="mfa-desc" style="color:var(--text-medium);font-size:.875rem;">Al activarla, recibirás un código por correo cada vez que inicies sesión.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="mfa-toggle" onchange="toggleMFA(this.checked)">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div id="mfa-toast" class="perfil-toast" style="margin-top:.75rem;"></div>
+            </div>
+        </div>
+
+        <!-- Panel: Sesiones activas -->
+        <div id="panel-sesiones" class="perfil-panel">
+            <div class="perfil-card">
+                <h2 style="font-family:var(--font-heading);font-size:1.75rem;color:var(--primary-color);margin-bottom:.5rem;">Sesiones activas</h2>
+                <p style="color:var(--text-medium);font-size:.875rem;margin-bottom:2rem;">Estos son los dispositivos donde tienes sesión iniciada. Puedes cerrar sesiones remotas si detectas actividad sospechosa.</p>
+
+                <div id="sesiones-lista">
+                    <p style="color:var(--text-medium);text-align:center;padding:2rem;">Cargando sesiones...</p>
+                </div>
+
+                <div id="sesiones-toast" class="perfil-toast"></div>
+
+                <button class="btn-perfil peligro" onclick="cerrarTodasSesiones()" style="margin-top:1.5rem;">
+                    Cerrar todas las demás sesiones
+                </button>
+            </div>
+        </div>
+
+        <!-- Panel: Preferencias -->
+        <div id="panel-preferencias" class="perfil-panel">
+            <div class="perfil-card">
+                <h2 style="font-family:var(--font-heading);font-size:1.75rem;color:var(--primary-color);margin-bottom:.5rem;">Preferencias</h2>
+                <p style="color:var(--text-medium);font-size:.875rem;margin-bottom:2rem;">Personaliza tu experiencia en Floré Designs.</p>
+
+                <div style="display:flex;align-items:center;justify-content:space-between;padding:1.2rem;background:#f9f9f9;border-radius:10px;margin-bottom:1rem;">
+                    <div>
+                        <p style="font-weight:600;font-size:.9rem;color:var(--primary-color);">Modo oscuro</p>
+                        <p style="font-size:.8rem;color:#999;">Cambia el tema de la interfaz.</p>
+                    </div>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="pref-tema" onchange="DarkModeModule && DarkModeModule.toggle()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+
+                <div id="pref-toast" class="perfil-toast"></div>
+                <button class="btn-perfil primario" onclick="guardarPreferencias()" style="margin-top:1rem;">Guardar preferencias</button>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<script src="js/animations.js"></script>
+<script src="js/darkmode.js"></script>
+<script src="js/auth.api.js"></script>
+
+<script>
+/* ══════════════════════════════════════════
+   PERFIL - Controlador principal
+══════════════════════════════════════════ */
+
+// Proteger ruta: solo usuarios autenticados
+document.addEventListener('DOMContentLoaded', async () => {
+    auth.requerirAuth();
+    await cargarDatosPerfil();
+});
+
+/* Navegación entre paneles */
+function mostrarPanel(nombre, btnEl) {
+    document.querySelectorAll('.perfil-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.perfil-nav-item').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + nombre)?.classList.add('active');
+    if (btnEl) btnEl.classList.add('active');
+
+    if (nombre === 'sesiones') cargarSesiones();
+}
+
+/* Toast dentro de panel */
+function _toast(id, msg, tipo) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'perfil-toast ' + tipo;
+    el.style.display = 'block';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+/* ── Cargar datos del usuario ── */
+async function cargarDatosPerfil() {
+    try {
+        const res  = await auth.fetch('api/perfil/datos.php');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        // Llenar formulario
+        document.getElementById('perfil-nombre').value    = data.nombre    || '';
+        document.getElementById('perfil-email').value     = data.email     || '';
+        document.getElementById('perfil-telefono').value  = data.telefono  || '';
+
+        // Sidebar
+        const inicial = (data.nombre || 'U').charAt(0).toUpperCase();
+        document.getElementById('perfil-avatar').textContent      = inicial;
+        document.getElementById('perfil-nombre-sidebar').textContent = data.nombre || data.email;
+        document.getElementById('perfil-rol-sidebar').textContent    = data.rol    || '';
+
+        // MFA toggle
+        const mfaToggle = document.getElementById('mfa-toggle');
+        if (mfaToggle) {
+            mfaToggle.checked = !!data.mfa_activo;
+            document.getElementById('mfa-desc').textContent = data.mfa_activo
+                ? 'La verificación en dos pasos está activada.'
+                : 'La verificación en dos pasos está desactivada.';
+        }
+
+        // Tema
+        const prefTema = document.getElementById('pref-tema');
+        if (prefTema) prefTema.checked = data.tema === 'oscuro';
+
+    } catch (err) {
+        console.warn('Error al cargar perfil:', err.message);
+    }
+}
+
+/* ── Guardar datos personales ── */
+async function guardarDatos() {
+    const nombre   = document.getElementById('perfil-nombre').value.trim();
+    const telefono = document.getElementById('perfil-telefono').value.trim();
+
+    if (!nombre) { _toast('datos-toast', 'El nombre es obligatorio.', 'error'); return; }
+
+    try {
+        const res  = await auth.fetch('api/perfil/datos.php', {
+            method: 'POST',
+            body: JSON.stringify({ nombre, telefono })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        _toast('datos-toast', 'Datos actualizados correctamente.', 'exito');
+        document.getElementById('perfil-nombre-sidebar').textContent = nombre;
+        document.getElementById('perfil-avatar').textContent = nombre.charAt(0).toUpperCase();
+    } catch (err) {
+        _toast('datos-toast', err.message, 'error');
+    }
+}
+
+/* ── Cambiar contraseña ── */
+async function cambiarPassword() {
+    const actual    = document.getElementById('pwd-actual').value;
+    const nueva     = document.getElementById('pwd-nueva').value;
+    const confirmar = document.getElementById('pwd-confirmar').value;
+
+    if (!actual || !nueva) { _toast('pwd-toast', 'Completa todos los campos.', 'error'); return; }
+    if (nueva !== confirmar) { _toast('pwd-toast', 'Las contraseñas nuevas no coinciden.', 'error'); return; }
+    if (nueva.length < 8)   { _toast('pwd-toast', 'La nueva contraseña debe tener al menos 8 caracteres.', 'error'); return; }
+
+    try {
+        const res  = await auth.fetch('api/perfil/cambiar-password.php', {
+            method: 'POST',
+            body: JSON.stringify({ password_actual: actual, password_nueva: nueva })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        _toast('pwd-toast', 'Contraseña actualizada. Vuelve a iniciar sesión.', 'exito');
+        document.getElementById('pwd-actual').value    = '';
+        document.getElementById('pwd-nueva').value     = '';
+        document.getElementById('pwd-confirmar').value = '';
+        setTimeout(() => auth.logout(), 2500);
+    } catch (err) {
+        _toast('pwd-toast', err.message, 'error');
+    }
+}
+
+/* ── Toggle MFA ── */
+async function toggleMFA(activar) {
+    const accion = activar ? 'activar_mfa' : 'desactivar_mfa';
+    try {
+        const res  = await auth.fetch('api/perfil/seguridad.php', {
+            method: 'POST',
+            body: JSON.stringify({ accion })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        document.getElementById('mfa-desc').textContent = activar
+            ? 'La verificación en dos pasos está activada.'
+            : 'La verificación en dos pasos está desactivada.';
+        _toast('mfa-toast', data.mensaje, 'exito');
+    } catch (err) {
+        _toast('mfa-toast', err.message, 'error');
+        document.getElementById('mfa-toggle').checked = !activar; // revertir
+    }
+}
+
+/* ── Cargar sesiones activas ── */
+async function cargarSesiones() {
+    const lista = document.getElementById('sesiones-lista');
+    lista.innerHTML = '<p style="color:var(--text-medium);text-align:center;padding:2rem;">Cargando...</p>';
+
+    try {
+        const res  = await auth.fetch('api/sesiones/listar.php');
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+
+        const sesiones = data.sesiones || [];
+        if (sesiones.length === 0) {
+            lista.innerHTML = '<p style="color:var(--text-medium);">No hay sesiones activas.</p>';
+            return;
+        }
+
+        lista.innerHTML = '';
+        sesiones.forEach(s => {
+            const esEsta = s.es_esta_sesion == 1;
+            const fecha  = s.ultimo_uso ? new Date(s.ultimo_uso).toLocaleString('es-MX') : 'Desconocida';
+            const div    = document.createElement('div');
+            div.className = 'sesion-item' + (esEsta ? ' esta-sesion' : '');
+            div.innerHTML = `
+                <div class="sesion-icono">${esEsta ? '💻' : '📱'}</div>
+                <div style="flex:1;">
+                    <p style="font-weight:600;font-size:.9rem;color:var(--primary-color);margin-bottom:.2rem;">
+                        ${s.dispositivo || 'Dispositivo desconocido'}
+                        ${esEsta ? '<span class="badge-activa">Esta sesión</span>' : ''}
+                    </p>
+                    <p style="font-size:.78rem;color:#999;">IP: ${s.ip} · Último uso: ${fecha}</p>
+                </div>
+                ${!esEsta ? `<button class="btn-perfil peligro" onclick="cerrarSesion('${s.sesion_id}', this)" style="padding:.5rem 1rem;font-size:.8rem;">Cerrar</button>` : ''}
+            `;
+            lista.appendChild(div);
+        });
+    } catch (err) {
+        lista.innerHTML = '<p style="color:#c62828;">Error al cargar sesiones: ' + err.message + '</p>';
+    }
+}
+
+/* ── Cerrar sesión específica ── */
+async function cerrarSesion(sesionId, btnEl) {
+    btnEl.disabled = true;
+    btnEl.textContent = '...';
+    try {
+        const res  = await auth.fetch('api/sesiones/cerrar.php', {
+            method: 'POST',
+            body: JSON.stringify({ sesion_id: sesionId })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        btnEl.closest('.sesion-item').remove();
+        _toast('sesiones-toast', 'Sesión cerrada correctamente.', 'exito');
+    } catch (err) {
+        _toast('sesiones-toast', err.message, 'error');
+        btnEl.disabled = false;
+        btnEl.textContent = 'Cerrar';
+    }
+}
+
+/* ── Cerrar todas las demás sesiones ── */
+async function cerrarTodasSesiones() {
+    if (!confirm('¿Cerrar todas las sesiones excepto esta?')) return;
+    try {
+        const res  = await auth.fetch('api/sesiones/cerrar.php', {
+            method: 'POST',
+            body: JSON.stringify({ todas: true })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        _toast('sesiones-toast', 'Todas las demás sesiones fueron cerradas.', 'exito');
+        await cargarSesiones();
+    } catch (err) {
+        _toast('sesiones-toast', err.message, 'error');
+    }
+}
+
+/* ── Guardar preferencias ── */
+async function guardarPreferencias() {
+    const tema = document.getElementById('pref-tema')?.checked ? 'oscuro' : 'claro';
+    try {
+        const res  = await auth.fetch('api/perfil/datos.php', {
+            method: 'POST',
+            body: JSON.stringify({ tema })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error);
+        _toast('pref-toast', 'Preferencias guardadas.', 'exito');
+    } catch (err) {
+        _toast('pref-toast', err.message, 'error');
+    }
+}
+</script>
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                        <p style="margin-top: 0.5rem;"><a href="recuperar.html" style="color: var(--text-medium); font-size: 0.82rem;">¿Olvidaste tu contraseña?</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,13 @@
+RewriteEngine On
+
+# Ocultar errores
+php_flag display_errors Off
+
+# Bloquear .env
+<Files ".env">
+Order allow,deny
+Deny from all
+</Files>
+
+# Redirigir login si no existe sesión
+DirectoryIndex index.php

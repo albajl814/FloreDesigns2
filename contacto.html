@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - Floré Designs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .contacto-form input, .contacto-form textarea, .contacto-form select {
+            width: 100%; padding: .85rem 1rem; border: 1.5px solid #e0e0e0; border-radius: 6px;
+            font-family: var(--font-body, sans-serif); font-size: .95rem; outline: none;
+            transition: border-color .2s; box-sizing: border-box; background: white; color: var(--primary-color);
+        }
+        .contacto-form input:focus, .contacto-form textarea:focus, .contacto-form select:focus {
+            border-color: var(--secondary-color, #C9A961);
+        }
+        .contacto-form label { display: block; font-size: .78rem; font-weight: 700; color: var(--text-medium); margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .07em; }
+        .campo { margin-bottom: 1.25rem; }
+        .info-item { display: flex; gap: 1rem; align-items: flex-start; margin-bottom: 2rem; }
+        .info-icono { width: 44px; height: 44px; border-radius: 10px; background: rgba(201,169,97,.1); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 700; color: #C9A961; font-size: .8rem; font-family: monospace; }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="menu">
+        <h1 class="logo"><a href="index.html">Floré Designs</a></h1>
+        <ul class="menu-principal">
+            <li><a href="buscar-disenos.html">Buscar diseños</a></li>
+            <li><a href="portafolio.html">Portafolio</a></li>
+            <li><a href="citas.html">Citas</a></li>
+            <li class="submenu perfil-menu" style="display:none;">
+                <a href="perfil.html">Mi cuenta <span class="dropdown-icon">▼</span></a>
+                <ul class="menu-secundario">
+                    <li><a href="perfil.html">Mi perfil</a></li>
+                    <li class="admin-menu-item" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                    <li><a href="#" onclick="auth.logout(); return false;">Cerrar sesión</a></li>
+                </ul>
+            </li>
+            <li class="auth-buttons">
+                <button class="auth-button secondary" onclick="openAuthModal('login')">Iniciar sesión</button>
+                <button class="auth-button primary" onclick="openAuthModal('register')">Registrarse</button>
+            </li>
+            <li><button class="btn-dark-mode" onclick="DarkModeModule.toggle()"><span class="texto-tema">Modo oscuro</span></button></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Hero -->
+    <section style="padding:8rem 2rem 5rem;background:#1a1a2e;color:white;text-align:center;">
+        <p style="font-family:var(--font-accent);font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;color:#C9A961;margin-bottom:1rem;">Estamos para ti</p>
+        <h1 style="font-family:var(--font-heading);font-size:clamp(3rem,7vw,5rem);font-weight:300;margin-bottom:1.5rem;">Contáctanos</h1>
+        <p style="color:rgba(255,255,255,.65);font-size:1.1rem;max-width:550px;margin:0 auto;line-height:1.8;">Cuéntanos sobre tu sueño. Estamos aquí para escucharte y crear juntas algo extraordinario.</p>
+    </section>
+
+    <!-- Formulario + Info -->
+    <section style="padding:7rem 2rem;max-width:1200px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:1fr 420px;gap:5rem;align-items:start;">
+
+            <!-- Formulario -->
+            <div>
+                <h2 style="font-family:var(--font-heading);font-size:2rem;color:var(--primary-color);margin-bottom:2rem;">Envíanos un mensaje</h2>
+                <form class="contacto-form" onsubmit="enviarContacto(event)">
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                        <div class="campo">
+                            <label>Nombre *</label>
+                            <input type="text" id="cnt-nombre" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="campo">
+                            <label>Correo electrónico *</label>
+                            <input type="email" id="cnt-email" placeholder="tu@correo.com" required>
+                        </div>
+                    </div>
+                    <div class="campo">
+                        <label>Teléfono</label>
+                        <input type="tel" id="cnt-telefono" placeholder="(449) 123-4567">
+                    </div>
+                    <div class="campo">
+                        <label>¿Para qué ocasión es tu vestido? *</label>
+                        <select id="cnt-ocasion" required>
+                            <option value="">Selecciona una opción</option>
+                            <option>Boda / Vestido de novia</option>
+                            <option>Quinceañera</option>
+                            <option>Gala o evento especial</option>
+                            <option>Graduación</option>
+                            <option>Otro</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>¿Cuándo es tu evento?</label>
+                        <input type="date" id="cnt-fecha">
+                    </div>
+                    <div class="campo">
+                        <label>Cuéntanos tu idea *</label>
+                        <textarea id="cnt-mensaje" rows="5" placeholder="Describe el vestido de tus sueños, colores, estilo, detalles importantes..." required style="resize:vertical;"></textarea>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1.5rem;">
+                        <input type="checkbox" id="cnt-privacidad" required style="width:18px;height:18px;accent-color:#C9A961;flex-shrink:0;">
+                        <label for="cnt-privacidad" style="font-size:.85rem;font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-medium);">
+                            Acepto el <a href="aviso-privacidad.html" style="color:var(--secondary-color,#C9A961);">aviso de privacidad</a> y los <a href="terminos.html" style="color:var(--secondary-color,#C9A961);">términos y condiciones</a>.
+                        </label>
+                    </div>
+                    <button type="submit" id="cnt-btn" style="padding:1rem 3rem;background:var(--primary-color,#1a1a2e);color:#C9A961;border:none;cursor:pointer;font-family:var(--font-accent);font-weight:700;font-size:.875rem;text-transform:uppercase;letter-spacing:.1em;transition:opacity .2s;width:100%;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                        Enviar mensaje
+                    </button>
+                    <div id="cnt-respuesta" style="display:none;margin-top:1rem;padding:1rem;border-radius:8px;font-size:.9rem;"></div>
+                </form>
+            </div>
+
+            <!-- Info de contacto -->
+            <div>
+                <h2 style="font-family:var(--font-heading);font-size:2rem;color:var(--primary-color);margin-bottom:2rem;">Información de contacto</h2>
+
+                <div class="info-item">
+                    <div class="info-icono">TEL</div>
+                    <div>
+                        <p style="font-weight:600;font-size:.875rem;color:var(--primary-color);margin-bottom:.3rem;">Teléfono</p>
+                        <a href="tel:+524491234567" style="color:var(--text-medium);text-decoration:none;font-size:.95rem;">(449) 123-4567</a><br>
+                        <a href="https://wa.me/524491234567" target="_blank" style="color:var(--secondary-color,#C9A961);text-decoration:none;font-size:.875rem;">Escríbenos por WhatsApp</a>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icono">@</div>
+                    <div>
+                        <p style="font-weight:600;font-size:.875rem;color:var(--primary-color);margin-bottom:.3rem;">Correo</p>
+                        <a href="mailto:hola@floredesigns.com" style="color:var(--text-medium);text-decoration:none;font-size:.95rem;">hola@floredesigns.com</a><br>
+                        <a href="mailto:citas@floredesigns.com" style="color:var(--text-medium);text-decoration:none;font-size:.875rem;">citas@floredesigns.com</a>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icono">DIR</div>
+                    <div>
+                        <p style="font-weight:600;font-size:.875rem;color:var(--primary-color);margin-bottom:.3rem;">Atelier</p>
+                        <p style="color:var(--text-medium);font-size:.95rem;line-height:1.7;">Av. Aguascalientes 123<br>Col. Centro, Aguascalientes<br>C.P. 20000</p>
+                    </div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-icono">HR</div>
+                    <div>
+                        <p style="font-weight:600;font-size:.875rem;color:var(--primary-color);margin-bottom:.5rem;">Horarios de atención</p>
+                        <div style="font-size:.875rem;color:var(--text-medium);line-height:2;">
+                            <span style="display:flex;justify-content:space-between;max-width:220px;"><span>Lunes – Viernes</span><span style="color:var(--secondary-color,#C9A961);">10:00 – 19:00</span></span>
+                            <span style="display:flex;justify-content:space-between;max-width:220px;"><span>Sábado</span><span style="color:var(--secondary-color,#C9A961);">10:00 – 15:00</span></span>
+                            <span style="display:flex;justify-content:space-between;max-width:220px;"><span>Domingo</span><span style="color:#999;">Solo con cita</span></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redes sociales -->
+                <div style="margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border-color,#e8e0d0);">
+                    <p style="font-family:var(--font-accent);font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:1rem;">Síguenos</p>
+                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                        <a href="https://instagram.com" target="_blank" style="padding:.5rem 1rem;border:1px solid var(--border-color,#ddd);border-radius:6px;font-size:.8rem;color:var(--text-medium);text-decoration:none;transition:all .2s;font-weight:600;" onmouseover="this.style.borderColor='#C9A961';this.style.color='#C9A961'" onmouseout="this.style.borderColor='var(--border-color,#ddd)';this.style.color='var(--text-medium)'">Instagram</a>
+                        <a href="https://facebook.com" target="_blank" style="padding:.5rem 1rem;border:1px solid var(--border-color,#ddd);border-radius:6px;font-size:.8rem;color:var(--text-medium);text-decoration:none;transition:all .2s;font-weight:600;" onmouseover="this.style.borderColor='#C9A961';this.style.color='#C9A961'" onmouseout="this.style.borderColor='var(--border-color,#ddd)';this.style.color='var(--text-medium)'">Facebook</a>
+                        <a href="https://tiktok.com" target="_blank" style="padding:.5rem 1rem;border:1px solid var(--border-color,#ddd);border-radius:6px;font-size:.8rem;color:var(--text-medium);text-decoration:none;transition:all .2s;font-weight:600;" onmouseover="this.style.borderColor='#C9A961';this.style.color='#C9A961'" onmouseout="this.style.borderColor='var(--border-color,#ddd)';this.style.color='var(--text-medium)'">TikTok</a>
+                        <a href="https://pinterest.com" target="_blank" style="padding:.5rem 1rem;border:1px solid var(--border-color,#ddd);border-radius:6px;font-size:.8rem;color:var(--text-medium);text-decoration:none;transition:all .2s;font-weight:600;" onmouseover="this.style.borderColor='#C9A961';this.style.color='#C9A961'" onmouseout="this.style.borderColor='var(--border-color,#ddd)';this.style.color='var(--text-medium)'">Pinterest</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Mapa placeholder -->
+    <section style="height:360px;background:linear-gradient(135deg,rgba(201,169,97,.08),rgba(26,26,46,.08));display:flex;align-items:center;justify-content:center;border-top:1px solid var(--border-color,#e8e0d0);">
+        <div style="text-align:center;">
+            <p style="font-family:var(--font-heading);font-size:1.5rem;color:var(--primary-color);margin-bottom:.5rem;">Av. Aguascalientes 123, Col. Centro</p>
+            <a href="https://maps.google.com" target="_blank" style="color:var(--secondary-color,#C9A961);font-size:.875rem;font-family:var(--font-accent);letter-spacing:.1em;text-transform:uppercase;text-decoration:none;">Ver en Google Maps &rarr;</a>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer mini -->
+<footer style="background:#0d0d1a;color:rgba(255,255,255,.85);">
+    <div style="height:3px;background:linear-gradient(90deg,transparent,#C9A961,transparent);"></div>
+    <div style="max-width:1300px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+        <p style="font-family:var(--font-heading);font-size:1.2rem;color:#C9A961;margin:0;">Floré Designs</p>
+        <nav style="display:flex;gap:2rem;flex-wrap:wrap;">
+            <a href="index.html"      style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Inicio</a>
+            <a href="nosotros.html"   style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Nosotros</a>
+            <a href="terminos.html"   style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Términos</a>
+            <a href="privacidad.html" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Privacidad</a>
+        </nav>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.3);">&copy; 2026 Floré Designs.</p>
+    </div>
+</footer>
+
+<script src="js/animations.js"></script>
+<script src="js/darkmode.js"></script>
+<script src="js/auth.api.js"></script>
+<script>
+function enviarContacto(e) {
+    e.preventDefault();
+    const btn  = document.getElementById('cnt-btn');
+    const resp = document.getElementById('cnt-respuesta');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+    // Simulación — cuando conectes el backend, aquí va el fetch
+    setTimeout(() => {
+        resp.style.display = 'block';
+        resp.style.background = '#e8f5e9';
+        resp.style.color = '#2e7d32';
+        resp.style.border = '1px solid #c8e6c9';
+        resp.textContent = '¡Mensaje recibido! Te contactaremos en menos de 24 horas. ✨';
+        btn.textContent = 'Mensaje enviado';
+        e.target.reset();
+    }, 1200);
+}
+</script>
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                        <p style="margin-top: 0.5rem;"><a href="recuperar.html" style="color: var(--text-medium); font-size: 0.82rem;">¿Olvidaste tu contraseña?</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

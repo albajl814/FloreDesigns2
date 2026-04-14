@@ -1,0 +1,330 @@
+/* =====================================================
+   ANIMACIONES Y TRANSICIONES - animations.css
+   Separado de base.css por responsabilidad.
+   Practica 2 - Motor de animaciones
+===================================================== */
+
+/* --------------------------------------------------
+   ANIMACIONES DE ENTRADA (Scroll / IntersectionObserver)
+   Las clases .oculto y .visible son controladas por JS.
+-------------------------------------------------- */
+
+/* Estado inicial: elemento oculto antes de entrar al viewport */
+.oculto {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Estado final: elemento visible al entrar al viewport */
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Variante: entrada desde la izquierda */
+.oculto-izquierda {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.oculto-izquierda.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Variante: entrada desde la derecha */
+.oculto-derecha {
+    opacity: 0;
+    transform: translateX(40px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.oculto-derecha.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* --------------------------------------------------
+   ANIMACIONES ESCALONADAS
+   Retraso incremental para elementos en serie.
+-------------------------------------------------- */
+.retraso-1 { transition-delay: 0.1s; }
+.retraso-2 { transition-delay: 0.2s; }
+.retraso-3 { transition-delay: 0.3s; }
+.retraso-4 { transition-delay: 0.4s; }
+.retraso-5 { transition-delay: 0.5s; }
+
+/* --------------------------------------------------
+   MOSTRAR / OCULTAR CON TRANSICION SUAVE
+   NO se usa display:none directamente.
+   Se controla con opacity + height animada.
+-------------------------------------------------- */
+
+.panel-colapsable {
+    opacity: 1;
+    max-height: 500px;
+    overflow: hidden;
+    transition: opacity 0.4s ease, max-height 0.4s ease;
+}
+
+.panel-colapsable.contraido {
+    opacity: 0;
+    max-height: 0;
+}
+
+/* --------------------------------------------------
+   LOADER / INDICADOR DE CARGA
+-------------------------------------------------- */
+
+.loader-contenedor {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.loader-contenedor.ocultar {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loader {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(201, 169, 97, 0.3);
+    border-top-color: #C9A961;
+    border-radius: 50%;
+    animation: girar 0.8s linear infinite;
+}
+
+@keyframes girar {
+    to { transform: rotate(360deg); }
+}
+
+/* --------------------------------------------------
+   NOTIFICACION DE NUEVOS DATOS (Practica 2 - Polling)
+   Aparece desde arriba con transform.
+-------------------------------------------------- */
+
+.notificacion-nueva {
+    position: fixed;
+    top: -80px;
+    right: 1.5rem;
+    background: #2d2d44;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-family: var(--font-accent, sans-serif);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 9999;
+}
+
+.notificacion-nueva.mostrar {
+    transform: translateY(100px);
+}
+
+/* --------------------------------------------------
+   EFECTO MAGNETICO EN BOTONES
+   El desplazamiento real es calculado en JS (animations.js).
+-------------------------------------------------- */
+
+.btn-magnetico {
+    display: inline-block;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    will-change: transform;
+}
+
+/* --------------------------------------------------
+   CARRUSEL - Practica 2
+-------------------------------------------------- */
+
+.carrusel-contenedor {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.carrusel-pista {
+    display: flex;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    will-change: transform;
+}
+
+.carrusel-slide {
+    flex: 0 0 100%;
+    min-width: 100%;
+}
+
+.carrusel-indicadores {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.carrusel-punto {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(201, 169, 97, 0.4);
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+    border: none;
+}
+
+.carrusel-punto.activo {
+    background: #C9A961;
+    transform: scale(1.3);
+}
+
+.carrusel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.9);
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, transform 0.2s ease;
+    z-index: 10;
+}
+
+.carrusel-btn:hover {
+    background: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carrusel-btn.anterior { left: 1rem; }
+.carrusel-btn.siguiente { right: 1rem; }
+
+/* --------------------------------------------------
+   PARALLAX CONTENEDOR
+   El desplazamiento es calculado por JS en mousemove.
+-------------------------------------------------- */
+
+.parallax-capa {
+    will-change: transform;
+    transition: transform 0.1s ease-out;
+}
+
+/* --------------------------------------------------
+   ANIMACION AL LLEGAR NUEVOS DATOS
+   Resalta temporalmente una fila o tarjeta nueva.
+-------------------------------------------------- */
+
+@keyframes destacar {
+    0%   { background-color: rgba(201, 169, 97, 0.4); }
+    100% { background-color: transparent; }
+}
+
+.item-nuevo {
+    animation: destacar 1.5s ease forwards;
+}
+
+/* --------------------------------------------------
+   MENSAJES DEL SISTEMA (CRUD)
+   Colores segun el tipo de mensaje.
+-------------------------------------------------- */
+
+.mensaje-sistema {
+    min-height: 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.5rem 0;
+    transition: opacity 0.3s ease;
+}
+
+.mensaje-exito  { color: #2e7d32; }
+.mensaje-error  { color: #c62828; }
+.mensaje-info   { color: #1565c0; }
+
+/* --------------------------------------------------
+   ESTILOS DEL CRUD DE DISENOS
+-------------------------------------------------- */
+
+.diseno-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s ease;
+}
+
+.diseno-item:hover {
+    background: #fafafa;
+}
+
+.diseno-texto {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.diseno-item.editando {
+    background: #fffbf0;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.input-edicion {
+    padding: 0.4rem 0.75rem;
+    border: 1px solid #C9A961;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    outline: none;
+}
+
+.campo-error {
+    border-color: #c62828 !important;
+    background: #fff5f5;
+}
+
+.btn-editar {
+    padding: 0.35rem 0.75rem;
+    background: #1565c0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btn-eliminar {
+    padding: 0.35rem 0.75rem;
+    background: #c62828;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btn-guardar {
+    padding: 0.35rem 0.75rem;
+    background: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+
+.btn-cancelar {
+    padding: 0.35rem 0.75rem;
+    background: #666;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.8rem;
+}

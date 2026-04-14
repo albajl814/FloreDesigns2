@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - Floré Designs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        body { background: #f8f6f2; }
+        .rec-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem; }
+        .rec-card { background: white; border-radius: 16px; box-shadow: 0 4px 32px rgba(0,0,0,.1); padding: 2.5rem; max-width: 460px; width: 100%; }
+        .rec-logo { font-family: var(--font-heading); font-size: 1.75rem; color: var(--primary-color, #1a1a2e); text-align: center; margin-bottom: .3rem; }
+        .rec-sub { text-align: center; font-size: .8rem; color: #C9A961; font-family: var(--font-accent); letter-spacing: .15em; text-transform: uppercase; margin-bottom: 2rem; }
+        .metodo-btn { display: flex; align-items: center; gap: 1rem; width: 100%; padding: 1rem 1.25rem; border: 1.5px solid #e8e0d0; border-radius: 10px; background: white; cursor: pointer; transition: all .2s; margin-bottom: .75rem; text-align: left; }
+        .metodo-btn:hover { border-color: #C9A961; background: #fdf9f2; }
+        .metodo-btn.activo { border-color: var(--primary-color, #1a1a2e); background: #f8f6f2; }
+        .metodo-icono { width: 42px; height: 42px; border-radius: 10px; background: #f0ece2; display: flex; align-items: center; justify-content: center; font-size: .75rem; font-weight: 700; color: #1a1a2e; font-family: monospace; flex-shrink: 0; }
+        .metodo-titulo { font-weight: 600; font-size: .9rem; color: var(--primary-color, #1a1a2e); }
+        .metodo-desc { font-size: .78rem; color: #888; margin-top: .1rem; }
+        label { display: block; font-size: .78rem; font-weight: 700; color: #666; margin-bottom: .4rem; text-transform: uppercase; letter-spacing: .06em; }
+        input { width: 100%; padding: .8rem 1rem; border: 1.5px solid #e0e0e0; border-radius: 8px; font-size: .95rem; outline: none; transition: border-color .2s; box-sizing: border-box; }
+        input:focus { border-color: #C9A961; }
+        .btn-rec { width: 100%; padding: .9rem; background: #1a1a2e; color: #C9A961; border: none; border-radius: 8px; cursor: pointer; font-family: var(--font-accent); font-weight: 700; font-size: .875rem; letter-spacing: .08em; text-transform: uppercase; transition: opacity .2s; margin-top: 1rem; }
+        .btn-rec:hover { opacity: .85; }
+        .btn-rec:disabled { opacity: .5; cursor: not-allowed; }
+        .msj { padding: .8rem 1rem; border-radius: 8px; font-size: .875rem; margin-top: 1rem; display: none; }
+        .msj.ok  { background: #e8f5e9; color: #2e7d32; border: 1px solid #c8e6c9; }
+        .msj.err { background: #fff5f5; color: #c62828; border: 1px solid #ffcdd2; }
+        .panel { display: none; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #f0ece2; }
+        .panel.activo { display: block; }
+        .paso { display: none; }
+        .paso.activo { display: block; }
+        .codigo-input { font-size: 1.8rem; letter-spacing: .5em; text-align: center; font-weight: 700; }
+        .nueva-pwd-field { position: relative; }
+        .toggle-pwd { position: absolute; right: .75rem; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #999; font-size: .8rem; }
+    </style>
+</head>
+<body>
+
+<div class="rec-wrap">
+    <div class="rec-card">
+        <div class="rec-logo">Floré Designs</div>
+        <div class="rec-sub">Recuperar contraseña</div>
+
+        <!-- Paso 1: Elegir método -->
+        <div id="paso-metodo" class="paso activo">
+            <p style="font-size:.9rem;color:#666;margin-bottom:1.5rem;text-align:center;line-height:1.6;">
+                Elige cómo quieres recuperar el acceso a tu cuenta.
+            </p>
+
+            <button class="metodo-btn" onclick="elegirMetodo('email', this)">
+                <div class="metodo-icono">@</div>
+                <div>
+                    <div class="metodo-titulo">Correo electrónico</div>
+                    <div class="metodo-desc">Recibe un enlace de recuperación</div>
+                </div>
+            </button>
+
+            <button class="metodo-btn" onclick="elegirMetodo('sms', this)">
+                <div class="metodo-icono">SMS</div>
+                <div>
+                    <div class="metodo-titulo">Código por SMS</div>
+                    <div class="metodo-desc">Recibe un código en tu teléfono</div>
+                </div>
+            </button>
+
+            <button class="metodo-btn" onclick="elegirMetodo('preguntas', this)">
+                <div class="metodo-icono">?</div>
+                <div>
+                    <div class="metodo-titulo">Pregunta secreta</div>
+                    <div class="metodo-desc">Responde tu pregunta de seguridad</div>
+                </div>
+            </button>
+
+            <button class="metodo-btn" onclick="elegirMetodo('llamada', this)">
+                <div class="metodo-icono">TEL</div>
+                <div>
+                    <div class="metodo-titulo">Llamada de voz</div>
+                    <div class="metodo-desc">Recibe un código por llamada simulada</div>
+                </div>
+            </button>
+        </div>
+
+        <!-- Paso 2: Formulario según método -->
+        <div id="paso-form" class="paso">
+
+            <!-- EMAIL -->
+            <div id="panel-email" class="panel">
+                <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:#1a1a2e;margin-bottom:1rem;">Recuperación por correo</h3>
+                <div style="margin-bottom:1rem;">
+                    <label>Tu correo electrónico</label>
+                    <input type="email" id="email-input" placeholder="tu@correo.com">
+                </div>
+                <button class="btn-rec" onclick="enviarEmail()">Enviar enlace de recuperación</button>
+                <div id="email-msj" class="msj"></div>
+            </div>
+
+            <!-- SMS -->
+            <div id="panel-sms" class="panel">
+                <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:#1a1a2e;margin-bottom:1rem;">Recuperación por SMS</h3>
+                <div id="sms-paso1">
+                    <div style="margin-bottom:1rem;">
+                        <label>Tu correo electrónico</label>
+                        <input type="email" id="sms-email" placeholder="tu@correo.com">
+                    </div>
+                    <button class="btn-rec" onclick="enviarSMS()">Enviar código SMS</button>
+                </div>
+                <div id="sms-paso2" style="display:none;">
+                    <p style="font-size:.875rem;color:#666;margin-bottom:1rem;">Ingresa el código que recibiste:</p>
+                    <div style="margin-bottom:1rem;">
+                        <input type="text" id="sms-codigo" class="codigo-input" maxlength="6" placeholder="000000">
+                    </div>
+                    <button class="btn-rec" onclick="verificarSMS()">Verificar código</button>
+                </div>
+                <div id="sms-msj" class="msj"></div>
+            </div>
+
+            <!-- PREGUNTAS SECRETAS -->
+            <div id="panel-preguntas" class="panel">
+                <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:#1a1a2e;margin-bottom:1rem;">Pregunta secreta</h3>
+                <div id="preg-paso1">
+                    <div style="margin-bottom:1rem;">
+                        <label>Tu correo electrónico</label>
+                        <input type="email" id="preg-email" placeholder="tu@correo.com">
+                    </div>
+                    <button class="btn-rec" onclick="obtenerPregunta()">Continuar</button>
+                </div>
+                <div id="preg-paso2" style="display:none;">
+                    <div style="margin-bottom:1rem;padding:1rem;background:#f8f6f2;border-radius:8px;border-left:3px solid #C9A961;">
+                        <p style="font-size:.85rem;color:#555;font-weight:500;" id="preg-texto">Cargando pregunta...</p>
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <label>Tu respuesta</label>
+                        <input type="text" id="preg-respuesta" placeholder="Escribe tu respuesta">
+                    </div>
+                    <button class="btn-rec" onclick="verificarPregunta()">Verificar respuesta</button>
+                </div>
+                <div id="preg-msj" class="msj"></div>
+            </div>
+
+            <!-- LLAMADA -->
+            <div id="panel-llamada" class="panel">
+                <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:#1a1a2e;margin-bottom:1rem;">Recuperación por llamada</h3>
+                <div id="llamada-paso1">
+                    <div style="margin-bottom:1rem;">
+                        <label>Tu correo electrónico</label>
+                        <input type="email" id="llamada-email" placeholder="tu@correo.com">
+                    </div>
+                    <button class="btn-rec" onclick="solicitarLlamada()">Solicitar llamada</button>
+                </div>
+                <div id="llamada-paso2" style="display:none;">
+                    <div style="text-align:center;padding:1rem;background:#f8f6f2;border-radius:8px;margin-bottom:1rem;">
+                        <p style="font-size:.85rem;color:#555;">Recibirás una llamada simulada con tu código.</p>
+                        <p style="font-family:var(--font-heading);font-size:2rem;color:#1a1a2e;margin-top:.5rem;" id="llamada-codigo-display">—</p>
+                        <p style="font-size:.75rem;color:#999;">(Solo visible en modo desarrollo)</p>
+                    </div>
+                    <div style="margin-bottom:1rem;">
+                        <input type="text" id="llamada-codigo" class="codigo-input" maxlength="6" placeholder="000000">
+                    </div>
+                    <button class="btn-rec" onclick="verificarLlamada()">Verificar código</button>
+                </div>
+                <div id="llamada-msj" class="msj"></div>
+            </div>
+
+            <button onclick="volverMetodos()" style="width:100%;margin-top:1rem;padding:.7rem;background:none;border:1px solid #ddd;border-radius:8px;cursor:pointer;font-size:.85rem;color:#666;">← Elegir otro método</button>
+        </div>
+
+        <!-- Paso 3: Nueva contraseña (común a todos los métodos) -->
+        <div id="paso-nueva-pwd" class="paso">
+            <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:#1a1a2e;margin-bottom:.5rem;">Nueva contraseña</h3>
+            <p style="font-size:.875rem;color:#666;margin-bottom:1.5rem;">Elige una contraseña segura (mín. 8 caracteres, una mayúscula y un número).</p>
+
+            <div style="margin-bottom:1rem;" class="nueva-pwd-field">
+                <label>Nueva contraseña</label>
+                <input type="password" id="nueva-pwd" placeholder="Nueva contraseña">
+            </div>
+            <div style="margin-bottom:1rem;">
+                <label>Confirmar contraseña</label>
+                <input type="password" id="confirmar-pwd" placeholder="Repite la contraseña">
+            </div>
+
+            <div id="pwd-msj" class="msj"></div>
+            <button class="btn-rec" onclick="cambiarPassword()">Guardar nueva contraseña</button>
+        </div>
+
+        <div style="text-align:center;margin-top:1.5rem;">
+            <a href="index.html" style="font-size:.85rem;color:#999;text-decoration:none;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='#999'">← Volver al inicio</a>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ======================================
+   ESTADO
+====================================== */
+let _metodoActual = null;
+let _tokenReset   = null; // token devuelto por el backend para cambiar password
+let _emailActual  = null;
+
+/* Leer token de la URL (viene del enlace de email) */
+const _urlParams = new URLSearchParams(window.location.search);
+if (_urlParams.get('token') && _urlParams.get('metodo') === 'email') {
+    _tokenReset = _urlParams.get('token');
+    mostrarPaso('nueva-pwd');
+}
+
+/* ======================================
+   NAVEGACIÓN
+====================================== */
+function mostrarPaso(paso) {
+    ['metodo','form','nueva-pwd'].forEach(p => {
+        document.getElementById('paso-' + p).classList.remove('activo');
+    });
+    document.getElementById('paso-' + paso).classList.add('activo');
+}
+
+function elegirMetodo(metodo, btn) {
+    _metodoActual = metodo;
+    document.querySelectorAll('.metodo-btn').forEach(b => b.classList.remove('activo'));
+    btn.classList.add('activo');
+
+    // Ocultar todos los paneles
+    ['email','sms','preguntas','llamada'].forEach(m => {
+        document.getElementById('panel-' + m).classList.remove('activo');
+    });
+    document.getElementById('panel-' + metodo).classList.add('activo');
+    mostrarPaso('form');
+}
+
+function volverMetodos() {
+    mostrarPaso('metodo');
+    _metodoActual = null;
+}
+
+/* ======================================
+   HELPER: mostrar mensaje
+====================================== */
+function msj(id, texto, tipo) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = texto;
+    el.className = 'msj ' + tipo;
+    el.style.display = 'block';
+}
+
+/* ======================================
+   MÉTODO 1: EMAIL
+====================================== */
+async function enviarEmail() {
+    const email = document.getElementById('email-input').value.trim();
+    if (!email) { msj('email-msj','Ingresa tu correo.','err'); return; }
+
+    try {
+        const res  = await fetch('api/auth/reset-email.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        msj('email-msj', data.mensaje || data.error, res.ok ? 'ok' : 'err');
+    } catch(_) {
+        msj('email-msj','Error de conexión.','err');
+    }
+}
+
+/* ======================================
+   MÉTODO 2: SMS
+====================================== */
+async function enviarSMS() {
+    const email = document.getElementById('sms-email').value.trim();
+    if (!email) { msj('sms-msj','Ingresa tu correo.','err'); return; }
+    _emailActual = email;
+
+    try {
+        const res  = await fetch('api/auth/reset-sms.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) { msj('sms-msj', data.error, 'err'); return; }
+        document.getElementById('sms-paso1').style.display = 'none';
+        document.getElementById('sms-paso2').style.display = 'block';
+        if (data._dev_codigo) msj('sms-msj', 'DEV — Código: ' + data._dev_codigo, 'ok');
+    } catch(_) { msj('sms-msj','Error de conexión.','err'); }
+}
+
+async function verificarSMS() {
+    const codigo = document.getElementById('sms-codigo').value.trim();
+    if (codigo.length < 6) { msj('sms-msj','Ingresa los 6 dígitos.','err'); return; }
+
+    try {
+        const res  = await fetch('api/auth/reset-sms.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email: _emailActual, codigo })
+        });
+        const data = await res.json();
+        if (!res.ok) { msj('sms-msj', data.error, 'err'); return; }
+        _tokenReset = data.token;
+        mostrarPaso('nueva-pwd');
+    } catch(_) { msj('sms-msj','Error de conexión.','err'); }
+}
+
+/* ======================================
+   MÉTODO 3: PREGUNTAS SECRETAS
+====================================== */
+async function obtenerPregunta() {
+    const email = document.getElementById('preg-email').value.trim();
+    if (!email) { msj('preg-msj','Ingresa tu correo.','err'); return; }
+    _emailActual = email;
+
+    try {
+        const res  = await fetch('api/auth/reset-preguntas.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email, accion: 'obtener_pregunta' })
+        });
+        const data = await res.json();
+        if (!res.ok) { msj('preg-msj', data.error, 'err'); return; }
+        document.getElementById('preg-texto').textContent = data.pregunta;
+        document.getElementById('preg-paso1').style.display = 'none';
+        document.getElementById('preg-paso2').style.display = 'block';
+    } catch(_) { msj('preg-msj','Error de conexión.','err'); }
+}
+
+async function verificarPregunta() {
+    const respuesta = document.getElementById('preg-respuesta').value.trim();
+    if (!respuesta) { msj('preg-msj','Escribe tu respuesta.','err'); return; }
+
+    try {
+        const res  = await fetch('api/auth/reset-preguntas.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email: _emailActual, respuesta, accion: 'verificar' })
+        });
+        const data = await res.json();
+        if (!res.ok) { msj('preg-msj', data.error, 'err'); return; }
+        _tokenReset = data.token;
+        mostrarPaso('nueva-pwd');
+    } catch(_) { msj('preg-msj','Error de conexión.','err'); }
+}
+
+/* ======================================
+   MÉTODO 4: LLAMADA
+====================================== */
+async function solicitarLlamada() {
+    const email = document.getElementById('llamada-email').value.trim();
+    if (!email) { msj('llamada-msj','Ingresa tu correo.','err'); return; }
+    _emailActual = email;
+
+    try {
+        const res  = await fetch('api/auth/reset-llamada.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        if (!res.ok) { msj('llamada-msj', data.error, 'err'); return; }
+        document.getElementById('llamada-paso1').style.display = 'none';
+        document.getElementById('llamada-paso2').style.display = 'block';
+        if (data._dev_codigo) {
+            document.getElementById('llamada-codigo-display').textContent = data._dev_codigo;
+        }
+    } catch(_) { msj('llamada-msj','Error de conexión.','err'); }
+}
+
+async function verificarLlamada() {
+    const codigo = document.getElementById('llamada-codigo').value.trim();
+    if (codigo.length < 6) { msj('llamada-msj','Ingresa los 6 dígitos.','err'); return; }
+
+    try {
+        const res  = await fetch('api/auth/reset-llamada.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email: _emailActual, codigo })
+        });
+        const data = await res.json();
+        if (!res.ok) { msj('llamada-msj', data.error, 'err'); return; }
+        _tokenReset = data.token;
+        mostrarPaso('nueva-pwd');
+    } catch(_) { msj('llamada-msj','Error de conexión.','err'); }
+}
+
+/* ======================================
+   PASO FINAL: CAMBIAR CONTRASEÑA
+====================================== */
+async function cambiarPassword() {
+    const nueva     = document.getElementById('nueva-pwd').value;
+    const confirmar = document.getElementById('confirmar-pwd').value;
+
+    if (nueva !== confirmar)    { msj('pwd-msj','Las contraseñas no coinciden.','err'); return; }
+    if (nueva.length < 8)       { msj('pwd-msj','Mínimo 8 caracteres.','err'); return; }
+    if (!/[A-Z]/.test(nueva))   { msj('pwd-msj','Necesita al menos una mayúscula.','err'); return; }
+    if (!/[0-9]/.test(nueva))   { msj('pwd-msj','Necesita al menos un número.','err'); return; }
+    if (!_tokenReset)           { msj('pwd-msj','Token de recuperación no válido. Empieza de nuevo.','err'); return; }
+
+    try {
+        const res  = await fetch('api/auth/reset-cambiar.php', {
+            method:'POST', headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ token: _tokenReset, nueva_password: nueva })
+        });
+        const data = await res.json();
+        if (!res.ok) { msj('pwd-msj', data.error, 'err'); return; }
+
+        msj('pwd-msj','¡Contraseña actualizada! Redirigiendo...','ok');
+        setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+    } catch(_) { msj('pwd-msj','Error de conexión.','err'); }
+}
+</script>
+</body>
+</html>

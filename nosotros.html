@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosotros - Floré Designs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<header>
+    <nav class="menu">
+        <h1 class="logo"><a href="index.html">Floré Designs</a></h1>
+        <ul class="menu-principal">
+            <li><a href="buscar-disenos.html">Buscar diseños</a></li>
+            <li><a href="portafolio.html">Portafolio</a></li>
+            <li><a href="citas.html">Citas</a></li>
+            <li class="submenu perfil-menu" style="display:none;">
+                <a href="perfil.html">Mi cuenta <span class="dropdown-icon">▼</span></a>
+                <ul class="menu-secundario">
+                    <li><a href="perfil.html">Mi perfil</a></li>
+                    <li class="admin-menu-item" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                    <li><a href="#" onclick="auth.logout(); return false;">Cerrar sesión</a></li>
+                </ul>
+            </li>
+            <li class="auth-buttons">
+                <button class="auth-button secondary" onclick="openAuthModal('login')">Iniciar sesión</button>
+                <button class="auth-button primary" onclick="openAuthModal('register')">Registrarse</button>
+            </li>
+            <li><button class="btn-dark-mode" onclick="DarkModeModule.toggle()"><span class="texto-tema">Modo oscuro</span></button></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Hero -->
+    <section style="position:relative; padding: 10rem 2rem 7rem; background: #1a1a2e; color: white; text-align: center; overflow: hidden;">
+        <div style="position:absolute;inset:0;opacity:.08;background:radial-gradient(ellipse at 30% 50%, #C9A961 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, #6c5ce7 0%, transparent 60%);"></div>
+        <div style="position:relative;z-index:1;max-width:700px;margin:0 auto;">
+            <p style="font-family:var(--font-accent);font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;color:#C9A961;margin-bottom:1.5rem;">Nuestra historia</p>
+            <h1 style="font-family:var(--font-heading);font-size:clamp(3rem,7vw,5rem);font-weight:300;line-height:1.1;margin-bottom:2rem;">Arte hecho<br>vestido</h1>
+            <p style="font-size:1.1rem;line-height:1.8;color:rgba(255,255,255,.75);">Desde 2018, Floré Designs ha sido el atelier de confianza de cientos de mujeres en Aguascalientes que buscan prendas únicas para sus momentos más importantes.</p>
+        </div>
+    </section>
+
+    <!-- Historia -->
+    <section style="padding:8rem 2rem;max-width:1200px;margin:0 auto;">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;">
+            <div>
+                <p style="font-family:var(--font-accent);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:1rem;">Cómo comenzamos</p>
+                <h2 style="font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);font-weight:400;line-height:1.2;color:var(--primary-color);margin-bottom:2rem;">Un sueño cosido con dedicación</h2>
+                <p style="font-size:1rem;line-height:1.9;color:var(--text-medium);margin-bottom:1.5rem;">Todo comenzó en el taller de la abuela de Flores Martínez, donde de niña aprendió que cada puntada cuenta una historia. Después de estudiar diseño de moda en Ciudad de México y trabajar en varias casas de moda, regresó a Aguascalientes con un solo objetivo: crear un atelier donde cada clienta se sintiera única.</p>
+                <p style="font-size:1rem;line-height:1.9;color:var(--text-medium);">Hoy, Floré Designs es mucho más que una tienda. Es un espacio donde los sueños toman forma, donde cada consulta comienza con una taza de café y termina con un diseño que no existe en ningún otro lugar del mundo.</p>
+            </div>
+            <!-- Placeholder visual elegante -->
+            <div style="aspect-ratio:4/5;background:linear-gradient(135deg,rgba(201,169,97,.15),rgba(108,92,231,.15));border-radius:4px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(201,169,97,.2);">
+                <div style="text-align:center;padding:2rem;">
+                    <div style="font-family:var(--font-heading);font-size:5rem;font-weight:300;color:var(--secondary-color,#C9A961);line-height:1;">FD</div>
+                    <p style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--text-medium);margin-top:.5rem;">Atelier · Est. 2018</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Números -->
+    <section style="padding:6rem 2rem;background:var(--primary-color,#1a1a2e);color:white;">
+        <div style="max-width:1000px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:3rem;text-align:center;">
+            <div>
+                <div style="font-family:var(--font-heading);font-size:4rem;font-weight:300;color:#C9A961;line-height:1;">+800</div>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:.5rem;">Vestidos creados</p>
+            </div>
+            <div>
+                <div style="font-family:var(--font-heading);font-size:4rem;font-weight:300;color:#C9A961;line-height:1;">6</div>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:.5rem;">Años de experiencia</p>
+            </div>
+            <div>
+                <div style="font-family:var(--font-heading);font-size:4rem;font-weight:300;color:#C9A961;line-height:1;">98%</div>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:.5rem;">Clientas satisfechas</p>
+            </div>
+            <div>
+                <div style="font-family:var(--font-heading);font-size:4rem;font-weight:300;color:#C9A961;line-height:1;">12</div>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.6);margin-top:.5rem;">Artesanos expertos</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Valores -->
+    <section style="padding:8rem 2rem;background:#fafaf8;">
+        <div style="max-width:1200px;margin:0 auto;">
+            <div style="text-align:center;margin-bottom:5rem;">
+                <p style="font-family:var(--font-accent);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:1rem;">Lo que nos define</p>
+                <h2 style="font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);font-weight:400;color:var(--primary-color);">Nuestros valores</h2>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2rem;">
+                <div style="background:white;padding:2.5rem;border-radius:4px;box-shadow:0 2px 16px rgba(0,0,0,.06);border-top:3px solid #C9A961;">
+                    <h3 style="font-family:var(--font-heading);font-size:1.5rem;color:var(--primary-color);margin-bottom:1rem;">Exclusividad</h3>
+                    <p style="color:var(--text-medium);line-height:1.8;font-size:.95rem;">Cada diseño es único. Nunca reproducimos dos veces el mismo vestido, garantizando que tu pieza sea verdaderamente irrepetible.</p>
+                </div>
+                <div style="background:white;padding:2.5rem;border-radius:4px;box-shadow:0 2px 16px rgba(0,0,0,.06);border-top:3px solid #6c5ce7;">
+                    <h3 style="font-family:var(--font-heading);font-size:1.5rem;color:var(--primary-color);margin-bottom:1rem;">Artesanía</h3>
+                    <p style="color:var(--text-medium);line-height:1.8;font-size:.95rem;">Trabajamos con técnicas de alta costura, utilizando telas importadas y materiales premium seleccionados personalmente para cada proyecto.</p>
+                </div>
+                <div style="background:white;padding:2.5rem;border-radius:4px;box-shadow:0 2px 16px rgba(0,0,0,.06);border-top:3px solid #e94560;">
+                    <h3 style="font-family:var(--font-heading);font-size:1.5rem;color:var(--primary-color);margin-bottom:1rem;">Atención</h3>
+                    <p style="color:var(--text-medium);line-height:1.8;font-size:.95rem;">Tu comodidad es nuestra prioridad. Desde la primera cita hasta la entrega, te acompañamos en cada paso del proceso de creación.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Equipo -->
+    <section id="equipo" style="padding:8rem 2rem;max-width:1200px;margin:0 auto;">
+        <div style="text-align:center;margin-bottom:5rem;">
+            <p style="font-family:var(--font-accent);font-size:.75rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:1rem;">Las personas detrás de cada puntada</p>
+            <h2 style="font-family:var(--font-heading);font-size:clamp(2rem,4vw,3rem);font-weight:400;color:var(--primary-color);">Nuestro equipo</h2>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:2.5rem;">
+            <div style="text-align:center;">
+                <div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#C9A961,#a07c3e);margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:2.5rem;color:white;font-weight:300;">FM</div>
+                <h3 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--primary-color);margin-bottom:.3rem;">Flores Martínez</h3>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:.75rem;">Fundadora & Diseñadora Principal</p>
+                <p style="font-size:.875rem;color:var(--text-medium);line-height:1.7;">10 años de experiencia en alta costura. Egresada del Instituto de Diseño de Moda de CDMX.</p>
+            </div>
+            <div style="text-align:center;">
+                <div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#6c5ce7,#a29bfe);margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:2.5rem;color:white;font-weight:300;">LR</div>
+                <h3 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--primary-color);margin-bottom:.3rem;">Lucía Reyes</h3>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:.75rem;">Diseñadora Senior</p>
+                <p style="font-size:.875rem;color:var(--text-medium);line-height:1.7;">Especialista en bordados y detalles florales. Cada pieza que toca se convierte en una obra de arte.</p>
+            </div>
+            <div style="text-align:center;">
+                <div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#e94560,#f38ba8);margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:2.5rem;color:white;font-weight:300;">CM</div>
+                <h3 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--primary-color);margin-bottom:.3rem;">Carmen Muñoz</h3>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:.75rem;">Maestra Costurera</h3>
+                <p style="font-size:.875rem;color:var(--text-medium);line-height:1.7;">25 años de oficio. Sus manos son las que dan vida a los diseños con precisión milimétrica.</p>
+            </div>
+            <div style="text-align:center;">
+                <div style="width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#00b894,#55efc4);margin:0 auto 1.5rem;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:2.5rem;color:white;font-weight:300;">AS</div>
+                <h3 style="font-family:var(--font-heading);font-size:1.4rem;color:var(--primary-color);margin-bottom:.3rem;">Andrea Soto</h3>
+                <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--secondary-color,#C9A961);margin-bottom:.75rem;">Asesora de Cliente</p>
+                <p style="font-size:.875rem;color:var(--text-medium);line-height:1.7;">Tu primer punto de contacto. Escucha tus sueños y los traduce en el diseño perfecto para ti.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="padding:7rem 2rem;background:var(--primary-color,#1a1a2e);color:white;text-align:center;">
+        <h2 style="font-family:var(--font-heading);font-size:clamp(2rem,5vw,3.5rem);font-weight:400;margin-bottom:1.5rem;">¿Lista para conocernos?</h2>
+        <p style="font-size:1.1rem;color:rgba(255,255,255,.7);margin-bottom:3rem;max-width:600px;margin-left:auto;margin-right:auto;line-height:1.8;">Agenda tu consultoría gratuita y ven a conocer nuestro atelier. Te esperamos con café y muchas ideas.</p>
+        <a href="citas.html" style="padding:1.2rem 3rem;background:#C9A961;color:#1a1a2e;text-decoration:none;font-family:var(--font-accent);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.875rem;display:inline-block;">Agendar mi visita</a>
+    </section>
+
+</main>
+
+<!-- FOOTER (copiado de index.html) -->
+<footer style="background:#0d0d1a;color:rgba(255,255,255,.85);">
+    <div style="height:3px;background:linear-gradient(90deg,transparent,#C9A961,transparent);"></div>
+    <div style="max-width:1300px;margin:0 auto;padding:3rem 2rem 1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1.5rem;">
+        <div>
+            <h2 style="font-family:var(--font-heading);font-size:1.5rem;color:#C9A961;margin-bottom:.3rem;">Floré Designs</h2>
+            <p style="font-size:.8rem;color:rgba(255,255,255,.4);">Haute Couture · Aguascalientes</p>
+        </div>
+        <nav style="display:flex;gap:2rem;flex-wrap:wrap;">
+            <a href="index.html"      style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Inicio</a>
+            <a href="nosotros.html"   style="color:#C9A961;text-decoration:none;font-size:.85rem;">Nosotros</a>
+            <a href="contacto.html"   style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Contacto</a>
+            <a href="terminos.html"   style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Términos</a>
+            <a href="privacidad.html" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Privacidad</a>
+        </nav>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.3);">&copy; 2026 Floré Designs. Todos los derechos reservados.</p>
+    </div>
+</footer>
+
+<script src="js/animations.js"></script>
+<script src="js/darkmode.js"></script>
+<script src="js/auth.api.js"></script>
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                        <p style="margin-top: 0.5rem;"><a href="recuperar.html" style="color: var(--text-medium); font-size: 0.82rem;">¿Olvidaste tu contraseña?</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

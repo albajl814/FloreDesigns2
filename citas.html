@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendar Cita - Floré Designs</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ENCABEZADO CON MENÚ -->
+<header>
+    <nav class="menu">
+        <h1 class="logo">
+            <a href="index.html">Floré Designs</a>
+        </h1>
+
+        <ul class="menu-principal">
+            <li class="submenu">
+                <a href="buscar-disenos.html">
+                    
+                    Buscar diseños
+                    <span class="dropdown-icon">▼</span>
+                </a>
+                <ul class="menu-secundario">
+                    <li><a href="por-tipo-vestido.html">Por tipo de vestido</a></li>
+                    <li><a href="por-evento.html">Por evento</a></li>
+        
+            <!-- Reto: Modo Oscuro -->
+            <li>
+                <button class="btn-dark-mode" onclick="DarkModeModule.toggle()" title="Cambiar tema">
+                    <span class="texto-tema">Modo oscuro</span>
+                </button>
+            </li>
+        </ul>
+            </li>
+
+            <li><a href="portafolio.html">Portafolio</a></li>
+            <li><a href="citas.html">Citas</a></li>
+
+            <li class="submenu perfil-menu">
+                <a href="perfil.html">
+                    Perfil
+                    <span class="dropdown-icon">▼</span>
+                </a>
+                <ul class="menu-secundario">
+                    <li class="cliente-menu-item"><a href="perfil.html">Mis datos</a></li>
+                    <li class="cliente-menu-item"><a href="mis-pedidos.html">Mis pedidos</a></li>
+                    <li class="admin-menu-item" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                    <li><a href="#" onclick="auth.logout(); return false;">Cerrar sesion</a></li>
+                </ul>
+            </li>
+
+            <li class="auth-buttons">
+                <button class="auth-button secondary iniciar-sesion-btn" onclick="openAuthModal('login')">
+                    Iniciar sesión
+                </button>
+                <button class="auth-button primary registro-btn" onclick="openAuthModal('register')">
+                    Registrarse
+                </button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<!-- BREADCRUMBS -->
+<div class="breadcrumbs">
+    <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li class="current">Agendar Cita</li>
+    </ol>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main>
+    <div class="hero" style="padding: 2rem 0;">
+        <h1 style="font-size: 2.5rem;">Agendar Cita</h1>
+        <p>Agenda tu cotización personalizada, toma de medidas o prueba de vestido</p>
+    </div>
+
+    <div class="grid-2">
+        
+        <!-- Formulario de citas -->
+        <div class="card">
+            <h2 style="margin-bottom: 1.5rem;">Datos de la Cita</h2>
+            
+            <form id="appointmentForm" onsubmit="handleAppointment(event)">
+                <div class="form-group">
+                    <label for="tipoCita">Tipo de cita *</label>
+                    <select id="tipoCita" required>
+                        <option value="">Selecciona una opción</option>
+                        <option value="cotizacion">Cotización y consultoría de diseño</option>
+                        <option value="medidas">Toma de medidas</option>
+                        <option value="prueba1">Primera prueba</option>
+                        <option value="prueba2">Segunda prueba</option>
+                        <option value="entrega">Entrega final</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaCita">Fecha preferida *</label>
+                    <input type="date" id="fechaCita" required min="">
+                </div>
+
+                <div class="form-group">
+                    <label for="horaCita">Hora preferida *</label>
+                    <select id="horaCita" required>
+                        <option value="">Selecciona un horario</option>
+                        <option value="09:00">09:00 - 10:00</option>
+                        <option value="10:00">10:00 - 11:00</option>
+                        <option value="11:00">11:00 - 12:00</option>
+                        <option value="12:00">12:00 - 13:00</option>
+                        <option value="15:00">15:00 - 16:00</option>
+                        <option value="16:00">16:00 - 17:00</option>
+                        <option value="17:00">17:00 - 18:00</option>
+                        <option value="18:00">18:00 - 19:00</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comentariosCita">Comentarios adicionales</label>
+                    <textarea id="comentariosCita" placeholder="Cuéntanos sobre tu visión o necesidades especiales..."></textarea>
+                </div>
+
+                <div id="loginRequiredMessage" class="alert info" style="display: none;">
+                    <strong>Inicia sesión para continuar</strong>
+                    <p style="margin-top: 0.5rem; font-size: 0.9375rem;">Debes iniciar sesión o crear una cuenta para agendar una cita.</p>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <button type="button" class="btn" onclick="openAuthModal('login')" style="flex: 1;">
+                            Iniciar sesión
+                        </button>
+                        <button type="button" class="btn btn-secondary" onclick="openAuthModal('register')" style="flex: 1;">
+                            Registrarse
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                    Agendar cita
+                </button>
+            </form>
+        </div>
+
+        <!-- Información adicional -->
+        <div>
+            <div class="info-card" style="margin-bottom: 1.5rem;">
+                <h3>Horarios de Atención</h3>
+                <p style="color: var(--text-medium); line-height: 1.8;">
+                    <strong>Lunes a Viernes:</strong> 9:00 AM - 7:00 PM<br>
+                    <strong>Sábados:</strong> 10:00 AM - 2:00 PM<br>
+                    <strong>Domingos:</strong> Cerrado
+                </p>
+            </div>
+
+            <div class="info-card" style="margin-bottom: 1.5rem;">
+                <h3>Ubicacion</h3>
+                <p style="color: var(--text-medium); line-height: 1.8;">
+                   
+                </p>
+            </div>
+
+            <div class="info-card" style="margin-bottom: 1.5rem;">
+                <h3>Contacto</h3>
+                <p style="color: var(--text-medium); margin-bottom: 0.5rem;">
+                    <strong>Teléfono:</strong> +52 (449) 283-2349
+                </p>
+                <p style="color: var(--text-medium); margin-bottom: 0.5rem;">
+                    <strong>WhatsApp:</strong> +52 (449) 283-2349
+                </p>
+                <p style="color: var(--text-medium);">
+                    <strong>Email:</strong> citas@floredesigns.com
+                </p>
+            </div>
+
+            <div class="alert success">
+                <h3 style="margin-bottom: 0.75rem;">Información Importante</h3>
+                <ul style="line-height: 1.8; font-size: 0.9375rem; margin-left: 1.25rem;">
+                    <li>Las citas deben agendarse con al menos 48 horas de anticipación</li>
+                    <li>Por favor llega 10 minutos antes de tu cita</li>
+                    <li>Para cancelaciones, avisar con 24 horas de anticipación</li>
+                    <li>Consulta inicial completamente gratuita</li>
+                </ul>
+            </div>
+
+            <!-- Mis Citas (solo visible cuando hay sesión) -->
+            <div id="userAppointments" style="display: none; margin-top: 2rem;">
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem;">Mis Citas Agendadas</h3>
+                    <div id="appointmentsList"></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<!-- MODAL DE AUTENTICACIÓN -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="js/darkmode.js"></script>
+<script src="js/dom.js"></script>
+<script src="js/validaciones.js"></script>
+<script src="js/captcha.js"></script>
+<script src="js/auth.api.js"></script>
+    <script src="js/main.js"></script>
+<script>
+// Configurar fecha mínima (hoy)
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('fechaCita').setAttribute('min', today);
+    
+    // Mostrar citas del usuario si está logueado
+    if (auth.isLoggedIn()) {
+        displayUserAppointments();
+    }
+});
+
+function displayUserAppointments() {
+    const userAppointmentsDiv = document.getElementById('userAppointments');
+    const appointmentsList = document.getElementById('appointmentsList');
+    
+    const appointments = appointmentSystem.getUserAppointments(auth.getCurrentUser().id);
+    
+    if (appointments.length > 0) {
+        userAppointmentsDiv.style.display = 'block';
+        
+        appointmentsList.innerHTML = appointments.map(apt => `
+            <div class="alert ${apt.estado === 'Cancelada' ? 'warning' : 'info'}" style="margin-bottom: 1rem;">
+                <div style="display: flex; justify-content: space-between; align-items: start;">
+                    <div>
+                        <strong style="display: block; margin-bottom: 0.5rem;">${getTipoCitaLabel(apt.tipo)}</strong>
+                        <p style="font-size: 0.875rem; margin: 0.25rem 0;">
+                             ${formatDate(apt.fecha)} a las ${apt.hora}
+                        </p>
+                        ${apt.comentarios ? `<p style="font-size: 0.875rem; margin-top: 0.5rem; color: var(--text-medium);">${apt.comentarios}</p>` : ''}
+                        <span style="display: inline-block; margin-top: 0.5rem; padding: 0.25rem 0.75rem; background: ${apt.estado === 'Cancelada' ? '#ff9800' : '#4caf50'}; color: white; border-radius: 12px; font-size: 0.75rem; font-weight: 500;">
+                            ${apt.estado}
+                        </span>
+                    </div>
+                    ${apt.estado !== 'Cancelada' ? `
+                        <button onclick="cancelAppointment(${apt.id})" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
+                            Cancelar
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function getTipoCitaLabel(tipo) {
+    const labels = {
+        'cotizacion': 'Cotización y consultoría de diseño',
+        'medidas': 'Toma de medidas',
+        'prueba1': 'Primera prueba',
+        'prueba2': 'Segunda prueba',
+        'entrega': 'Entrega final'
+    };
+    return labels[tipo] || tipo;
+}
+
+function cancelAppointment(id) {
+    if (confirm('¿Estás segura que deseas cancelar esta cita?')) {
+        appointmentSystem.cancelAppointment(id);
+        showNotification('Cita cancelada exitosamente', 'success');
+        displayUserAppointments();
+    }
+}
+</script>
+
+</body>
+</html>

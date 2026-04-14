@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Flore Designs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+
+<!-- Encabezado reutilizado -->
+<header>
+    <nav class="menu">
+        <h1 class="logo"><a href="index.html">Flore Designs</a></h1>
+        <ul class="menu-principal">
+            <li><a href="index.html">Inicio</a></li>
+            <li><a href="portafolio.html">Portafolio</a></li>
+            <li><a href="dashboard.html" style="color: var(--secondary-color);">Dashboard</a></li>
+            <li><a href="citas.html">Citas</a></li>
+
+            <!-- Reto: Modo Oscuro -->
+            <li>
+                <button class="btn-dark-mode" onclick="DarkModeModule.toggle()" title="Cambiar tema">
+                    <span class="texto-tema">Modo oscuro</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main style="max-width: 1200px; margin: 4rem auto; padding: 0 2rem;">
+
+    <!-- Titulo de la pagina -->
+    <div class="oculto" style="margin-bottom: 3rem;">
+        <h1 style="font-family: var(--font-heading); font-size: 3rem; color: var(--primary-color);">
+            Dashboard
+        </h1>
+        <p style="color: var(--text-medium);">
+            Carga asincrona de datos desde API externa con cache, debounce y polling en tiempo real.
+        </p>
+    </div>
+
+    <!-- Indicador de carga -->
+    <div id="loader" class="loader-contenedor">
+        <div class="loader"></div>
+        <span style="margin-left: 1rem; color: var(--text-medium);">Cargando datos...</span>
+    </div>
+
+    <!-- Mensaje de error de red -->
+    <div id="errorRed" style="display: none; background: #fff5f5; border: 1px solid #c62828; padding: 1rem 1.5rem; border-radius: 8px; color: #c62828; margin-bottom: 2rem;">
+        No se pudieron cargar algunos datos. Verifica tu conexion a internet.
+    </div>
+
+    <!-- Buscador con debounce -->
+    <div class="oculto retraso-1" style="margin-bottom: 2rem;">
+        <label for="buscadorApi" style="display: block; font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-accent);">
+            Buscar publicaciones (con debounce de 400ms)
+        </label>
+        <input
+            type="text"
+            id="buscadorApi"
+            placeholder="Escribe para buscar..."
+            style="width: 100%; padding: 0.75rem 1rem; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; outline: none;"
+        >
+    </div>
+
+    <!-- Indicador de nuevos datos (polling) -->
+    <div id="indicadorPolling" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; padding: 1rem 1.5rem; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);">
+        <div style="width: 10px; height: 10px; background: #4caf50; border-radius: 50%; animation: girar 2s linear infinite;"></div>
+        <span style="font-size: 0.875rem; color: var(--text-medium);">Actualizacion automatica activa (cada 30s)</span>
+        <span id="contadorNuevos" style="margin-left: auto; font-size: 0.875rem; font-weight: 600; color: var(--secondary-color);"></span>
+    </div>
+
+    <!-- Grid: Usuarios y Publicaciones -->
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 2rem;">
+
+        <!-- Panel de Usuarios -->
+        <div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--primary-color);">
+                    Usuarios
+                </h2>
+                <!-- Boton que usa togglePanel (mostrar/ocultar sin display:none) -->
+                <button
+                    onclick="AnimationsModule.togglePanel(document.getElementById('panelUsuarios'))"
+                    style="padding: 0.35rem 0.75rem; background: transparent; border: 1px solid var(--border-color); border-radius: 4px; cursor: pointer; font-size: 0.8rem;"
+                >
+                    Colapsar
+                </button>
+            </div>
+            <div id="panelUsuarios" class="panel-colapsable" style="background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); overflow: hidden;">
+                <ul id="listaUsuarios" style="list-style: none; padding: 0; margin: 0;"></ul>
+            </div>
+        </div>
+
+        <!-- Panel de Publicaciones -->
+        <div>
+            <h2 style="font-family: var(--font-heading); font-size: 1.5rem; color: var(--primary-color); margin-bottom: 1rem;">
+                Publicaciones
+            </h2>
+            <div id="listaPublicaciones" style="display: grid; gap: 1rem;"></div>
+        </div>
+
+    </div>
+
+</main>
+
+<!-- Carrusel de ejemplo (Practica 2) -->
+<section style="padding: 6rem 2rem; background: var(--bg-dark); margin-top: 4rem;">
+    <div style="max-width: 900px; margin: 0 auto;">
+        <h2 class="oculto" style="font-family: var(--font-heading); font-size: 2.5rem; color: white; text-align: center; margin-bottom: 3rem;">
+            Coleccion Destacada
+        </h2>
+
+        <!-- Carrusel -->
+        <div class="carrusel-contenedor">
+            <div class="carrusel-pista">
+                <div class="carrusel-slide" style="padding: 2rem; background: rgba(255,255,255,0.05); border-radius: 8px; min-height: 300px; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
+                    <div>
+                        <h3 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 1rem;">Novias 2026</h3>
+                        <p style="opacity: 0.8;">Disenos exclusivos para el dia mas especial de tu vida</p>
+                    </div>
+                </div>
+                <div class="carrusel-slide" style="padding: 2rem; background: rgba(201,169,97,0.1); border-radius: 8px; min-height: 300px; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
+                    <div>
+                        <h3 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 1rem;">Quinceaneras</h3>
+                        <p style="opacity: 0.8;">Elegancia y fantasia para tu gran celebracion</p>
+                    </div>
+                </div>
+                <div class="carrusel-slide" style="padding: 2rem; background: rgba(108,92,231,0.1); border-radius: 8px; min-height: 300px; display: flex; align-items: center; justify-content: center; text-align: center; color: white;">
+                    <div>
+                        <h3 style="font-family: var(--font-heading); font-size: 2rem; margin-bottom: 1rem;">Alta Gala</h3>
+                        <p style="opacity: 0.8;">Prendas de alta costura para eventos inolvidables</p>
+                    </div>
+                </div>
+            </div>
+            <button class="carrusel-btn anterior">&#8249;</button>
+            <button class="carrusel-btn siguiente">&#8250;</button>
+            <div class="carrusel-indicadores"></div>
+        </div>
+
+    </div>
+</section>
+
+<!-- Scripts: el orden importa -->
+<script src="js/darkmode.js"></script>
+<script src="js/cache.js"></script>
+<script src="js/api.js"></script>
+<script src="js/animations.js"></script>
+<script src="js/carousel.js"></script>
+<script src="js/dom.js"></script>
+<script src="js/auth.api.js"></script>
+    <script src="js/main.js"></script>
+
+<script>
+/* =====================================================
+   CONTROLADOR DEL DASHBOARD - Practica 2
+   Orquesta la carga asincrona, el buscador con debounce
+   y el polling en tiempo real.
+===================================================== */
+
+document.addEventListener("DOMContentLoaded", async () => {
+    auth.requerirAuth(); // Protección de ruta: redirige a index si no hay sesión
+
+    // Inicia animaciones de scroll
+    AnimationsModule.iniciar();
+
+    // Inicia el carrusel
+    CarouselModule.inicializarTodos({ intervalo: 5000 });
+
+    const loader             = document.getElementById("loader");
+    const errorRed           = document.getElementById("errorRed");
+    const listaUsuarios      = document.getElementById("listaUsuarios");
+    const listaPublicaciones = document.getElementById("listaPublicaciones");
+    const buscador           = document.getElementById("buscadorApi");
+    const contadorNuevos     = document.getElementById("contadorNuevos");
+
+    let publicacionesGlobales = [];
+    let numeroPrevio = 0;
+
+    /* --------------------------------------------------
+       MOSTRAR / OCULTAR LOADER
+       Usa classList en lugar de display para aprovechar
+       la transicion definida en animations.css
+    -------------------------------------------------- */
+    const mostrarLoader = () => {
+        loader.classList.remove("ocultar");
+        loader.style.display = "flex";
+    };
+
+    const ocultarLoader = () => {
+        loader.classList.add("ocultar");
+        setTimeout(() => { loader.style.display = "none"; }, 300);
+    };
+
+    /* --------------------------------------------------
+       RENDERIZAR USUARIOS
+    -------------------------------------------------- */
+    const renderizarUsuarios = (usuarios) => {
+        listaUsuarios.innerHTML = "";
+
+        usuarios.forEach(u => {
+            const li = document.createElement("li");
+            li.style.cssText = "padding: 0.75rem 1rem; border-bottom: 1px solid #f0f0f0; font-size: 0.875rem;";
+            li.innerHTML =
+                "<strong style='display:block;'>" + u.name + "</strong>" +
+                "<span style='color: var(--text-medium);'>" + u.email + "</span>";
+            listaUsuarios.appendChild(li);
+        });
+    };
+
+    /* --------------------------------------------------
+       RENDERIZAR PUBLICACIONES
+    -------------------------------------------------- */
+    const renderizarPublicaciones = (publicaciones, esNueva = false) => {
+        listaPublicaciones.innerHTML = "";
+
+        publicaciones.slice(0, 10).forEach(p => {
+            const div = document.createElement("div");
+            div.style.cssText = "background: white; padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.07);";
+            if (esNueva) div.classList.add("item-nuevo");
+
+            div.innerHTML =
+                "<p style='font-weight: 600; margin-bottom: 0.25rem; color: var(--primary-color); font-size: 0.9rem; text-transform: capitalize;'>" +
+                p.title + "</p>" +
+                "<p style='font-size: 0.8rem; color: var(--text-medium); line-height: 1.6;'>" +
+                p.body + "</p>";
+
+            listaPublicaciones.appendChild(div);
+        });
+    };
+
+    /* --------------------------------------------------
+       CARGA INICIAL (Promise.allSettled via cargarDashboard)
+    -------------------------------------------------- */
+    mostrarLoader();
+
+    try {
+        const datos = await APIModule.cargarDashboard();
+
+        if (datos.errores.usuarios || datos.errores.publicaciones) {
+            errorRed.style.display = "block";
+        }
+
+        if (datos.usuarios.length)      renderizarUsuarios(datos.usuarios);
+        if (datos.publicaciones.length) {
+            publicacionesGlobales = datos.publicaciones;
+            numeroPrevio = datos.publicaciones.length;
+            renderizarPublicaciones(datos.publicaciones);
+        }
+
+    } catch (err) {
+        errorRed.textContent = "Error inesperado: " + err.message;
+        errorRed.style.display = "block";
+    } finally {
+        ocultarLoader();
+    }
+
+    /* --------------------------------------------------
+       BUSCADOR CON DEBOUNCE (400ms)
+       No lanza peticion hasta que el usuario deje de escribir.
+    -------------------------------------------------- */
+    const buscarConDebounce = AnimationsModule.debounce(async (termino) => {
+        if (!termino.trim()) {
+            renderizarPublicaciones(publicacionesGlobales);
+            return;
+        }
+
+        mostrarLoader();
+        try {
+            const resultados = await APIModule.buscarConCancelacion(termino);
+            if (resultados !== null) {
+                renderizarPublicaciones(resultados);
+            }
+        } catch (err) {
+            errorRed.textContent = "Error al buscar: " + err.message;
+            errorRed.style.display = "block";
+        } finally {
+            ocultarLoader();
+        }
+    }, 400);
+
+    buscador.addEventListener("input", (e) => {
+        buscarConDebounce(e.target.value);
+    });
+
+    /* --------------------------------------------------
+       RETO FINAL OBLIGATORIO: POLLING INTELIGENTE
+       Simula actualizacion en tiempo real usando polling
+       con control de frecuencia adaptable.
+
+       Cumple todos los requisitos:
+         1. Animacion cuando llegan nuevos datos (item-nuevo + stagger)
+         2. Prevencion de duplicados por ID de publicacion
+         3. Notificacion visual con badge de conteo
+         4. Control de frecuencia (30s, se puede pausar)
+    -------------------------------------------------- */
+
+    // Set de IDs ya mostrados para prevenir duplicados exactos
+    const idsVistos = new Set();
+
+    // Inicializa los IDs con los datos ya cargados
+    if (publicacionesGlobales.length) {
+        publicacionesGlobales.forEach(p => idsVistos.add(p.id));
+    }
+
+    // Badge de notificacion flotante
+    const mostrarBadge = (cantidad) => {
+        let badge = document.getElementById("badgeNuevos");
+        if (!badge) {
+            badge = document.createElement("div");
+            badge.id = "badgeNuevos";
+            badge.style.cssText = [
+                "position:fixed", "top:80px", "right:24px", "z-index:9999",
+                "background:#c9a961", "color:#1a1a2e", "font-weight:700",
+                "padding:0.5rem 1.2rem", "border-radius:24px",
+                "font-size:0.85rem", "box-shadow:0 4px 16px rgba(201,169,97,0.4)",
+                "opacity:0", "transform:translateY(-12px)",
+                "transition:opacity 0.3s ease,transform 0.3s ease"
+            ].join(";");
+            document.body.appendChild(badge);
+        }
+        badge.textContent = "[+] " + cantidad + " actualizacion(es) en vivo";
+        requestAnimationFrame(() => {
+            badge.style.opacity = "1";
+            badge.style.transform = "translateY(0)";
+        });
+        setTimeout(() => {
+            badge.style.opacity = "0";
+            badge.style.transform = "translateY(-12px)";
+        }, 4000);
+    };
+
+    const polling = setInterval(async () => {
+        try {
+            // Fuerza datos frescos limpiando el caché
+            CacheModule.limpiar("publicaciones");
+            const datos = await APIModule.cargarPublicaciones();
+
+            // Filtra solo publicaciones con IDs no vistos (prevención de duplicados)
+            const verdaderamenteNuevas = datos.filter(p => !idsVistos.has(p.id));
+
+            if (verdaderamenteNuevas.length > 0) {
+                // Registra los nuevos IDs para no mostrarlos dos veces
+                verdaderamenteNuevas.forEach(p => idsVistos.add(p.id));
+                numeroPrevio = datos.length;
+                publicacionesGlobales = datos;
+
+                // Re-renderiza con animación de entrada
+                renderizarPublicaciones(datos, true);
+
+                // Notificacion de animaciones module (toast inferior)
+                AnimationsModule.mostrarNotificacionNuevos(
+                    verdaderamenteNuevas.length + " actualización(es) recibida(s)"
+                );
+
+                // Badge flotante en esquina (notificacion visual adicional)
+                mostrarBadge(verdaderamenteNuevas.length);
+
+                contadorNuevos.textContent = "Actualizado";
+                setTimeout(() => { contadorNuevos.textContent = ""; }, 5000);
+            } else {
+                contadorNuevos.textContent = "Sin cambios";
+                setTimeout(() => { contadorNuevos.textContent = ""; }, 3000);
+            }
+        } catch (err) {
+            console.warn("Polling: no se pudo actualizar.", err.message);
+            contadorNuevos.textContent = "Sin conexion";
+        }
+    }, 30000); // cada 30 segundos
+
+    // Limpia el polling al salir de la pagina para no dejar timers
+    window.addEventListener("beforeunload", () => clearInterval(polling));
+
+});
+</script>
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                        <p style="margin-top: 0.5rem;"><a href="recuperar.html" style="color: var(--text-medium); font-size: 0.82rem;">¿Olvidaste tu contraseña?</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Pedidos - Floré Designs</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- ENCABEZADO CON MENÚ -->
+<header>
+    <nav class="menu">
+        <h1 class="logo">
+            <a href="index.html">Floré Designs</a>
+        </h1>
+
+        <ul class="menu-principal">
+            <li class="submenu">
+                <a href="buscar-disenos.html">
+                    
+                    Buscar diseños
+                    <span class="dropdown-icon">▼</span>
+                </a>
+                <ul class="menu-secundario">
+                    <li><a href="por-tipo-vestido.html">Por tipo de vestido</a></li>
+                    <li><a href="por-evento.html">Por evento</a></li>
+        
+            <!-- Reto: Modo Oscuro -->
+            <li>
+                <button class="btn-dark-mode" onclick="DarkModeModule.toggle()" title="Cambiar tema">
+                    <span class="texto-tema">Modo oscuro</span>
+                </button>
+            </li>
+        </ul>
+            </li>
+
+            <li><a href="portafolio.html">Portafolio</a></li>
+            <li><a href="citas.html">Citas</a></li>
+
+            <li class="submenu perfil-menu">
+                <a href="perfil.html">
+                    Perfil
+                    <span class="dropdown-icon">▼</span>
+                </a>
+                <ul class="menu-secundario">
+                    <li class="cliente-menu-item"><a href="perfil.html">Mis datos</a></li>
+                    <li class="cliente-menu-item"><a href="mis-pedidos.html">Mis pedidos</a></li>
+                    <li class="admin-menu-item" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                    <li><a href="#" onclick="auth.logout(); return false;">Cerrar sesion</a></li>
+                </ul>
+            </li>
+
+            <li class="auth-buttons">
+                <button class="auth-button secondary iniciar-sesion-btn" onclick="openAuthModal('login')">
+                    Iniciar sesión
+                </button>
+                <button class="auth-button primary registro-btn" onclick="openAuthModal('register')">
+                    Registrarse
+                </button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<!-- BREADCRUMBS -->
+<div class="breadcrumbs">
+    <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="perfil.html">Perfil</a></li>
+        <li class="current">Mis Pedidos</li>
+    </ol>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<main>
+    <div id="authRequired" class="card text-center" style="max-width: 600px; margin: 4rem auto;">
+        <h2 style="margin-bottom: 1rem;">Acceso Restringido</h2>
+        <p style="color: var(--text-medium); margin-bottom: 2rem;">Debes iniciar sesión para ver tus pedidos</p>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="btn" onclick="openAuthModal('login')">Iniciar sesión</button>
+            <button class="btn btn-secondary" onclick="openAuthModal('register')">Registrarse</button>
+        </div>
+    </div>
+
+    <div id="ordersContent" style="display: none;">
+        <div class="hero" style="padding: 2rem 0;">
+            <h1 style="font-size: 2.5rem;">Mis Pedidos</h1>
+            <p>Consulta el estado y detalles de tus vestidos</p>
+        </div>
+
+        <!-- Botón para crear pedido de ejemplo -->
+        <div class="card" style="background: linear-gradient(135deg, var(--primary-color), var(--accent-color)); color: white; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h3 style="color: white; margin-bottom: 0.5rem;">¿Quieres crear un pedido de ejemplo?</h3>
+                    <p style="opacity: 0.95; font-size: 0.9375rem;">Simula la creación de un pedido para ver cómo funciona el sistema</p>
+                </div>
+                <button onclick="createSampleOrder()" class="btn" style="background: white; color: var(--primary-color);">
+                    Crear pedido
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista de pedidos -->
+        <div id="ordersList"></div>
+    </div>
+</main>
+
+<!-- MODAL DE AUTENTICACIÓN -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript -->
+<script src="js/darkmode.js"></script>
+<script src="js/dom.js"></script>
+<script src="js/validaciones.js"></script>
+<script src="js/captcha.js"></script>
+<script src="js/auth.api.js"></script>
+    <script src="js/main.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    if (auth.isLoggedIn()) {
+        loadOrders();
+    } else {
+        document.getElementById('authRequired').style.display = 'block';
+    }
+});
+
+function loadOrders() {
+    const user = auth.getCurrentUser();
+    
+    // Mostrar contenido de pedidos
+    document.getElementById('authRequired').style.display = 'none';
+    document.getElementById('ordersContent').style.display = 'block';
+    
+    // Obtener pedidos del usuario
+    const orders = orderSystem.getUserOrders(user.id);
+    const ordersList = document.getElementById('ordersList');
+    
+    if (orders.length === 0) {
+        ordersList.innerHTML = `
+            <div class="card text-center" style="padding: 4rem 2rem;">
+                
+                <h2 style="margin-bottom: 1rem; color: var(--text-medium);">No tienes pedidos aún</h2>
+                <p style="color: var(--text-light); margin-bottom: 2rem;">Crea un pedido de ejemplo usando el botón de arriba</p>
+            </div>
+        `;
+    } else {
+        ordersList.innerHTML = orders.map(order => `
+            <div class="card" style="margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: between; align-items: start; gap: 2rem;">
+                    <div style="flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <h2 style="margin: 0;">${order.titulo}</h2>
+                            <span style="padding: 0.375rem 0.875rem; background: ${getStatusColor(order.estado)}; color: white; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">
+                                ${order.estado}
+                            </span>
+                        </div>
+                        
+                        <p style="color: var(--text-medium); margin-bottom: 1rem; line-height: 1.7;">
+                            ${order.descripcion}
+                        </p>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                            <div>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem;">Fecha del evento</p>
+                                <p style="font-weight: 500; color: var(--text-dark);">${formatDate(order.fechaEvento)}</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem;">Fecha del pedido</p>
+                                <p style="font-weight: 500; color: var(--text-dark);">${formatDate(order.fechaPedido)}</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 0.875rem; color: var(--text-light); margin-bottom: 0.25rem;">Precio</p>
+                                <p style="font-weight: 600; color: var(--primary-color); font-size: 1.125rem;">${formatCurrency(order.precio)}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+function getStatusColor(estado) {
+    const colors = {
+        'En proceso': '#2196f3',
+        'En confección': '#ff9800',
+        'Listo para prueba': '#9c27b0',
+        'Completado': '#4caf50',
+        'Entregado': '#607d8b'
+    };
+    return colors[estado] || '#2196f3';
+}
+
+function createSampleOrder() {
+    const sampleOrders = [
+        {
+            titulo: 'Vestido de Novia Clásico',
+            descripcion: 'Vestido estilo princesa con cola larga, encaje francés y pedrería en el corpiño',
+            precio: 15000,
+            fechaEvento: '2026-06-15'
+        },
+        {
+            titulo: 'Vestido de Quinceañera',
+            descripcion: 'Vestido en tono rosa pastel con detalles bordados a mano y falda de tul',
+            precio: 12000,
+            fechaEvento: '2026-08-20'
+        },
+        {
+            titulo: 'Vestido de Graduación',
+            descripcion: 'Vestido corte sirena en color azul marino con escote corazón',
+            precio: 8500,
+            fechaEvento: '2026-07-10'
+        },
+        {
+            titulo: 'Vestido de Coctel',
+            descripcion: 'Vestido midi en satín color esmeralda con mangas acampanadas',
+            precio: 6500,
+            fechaEvento: '2026-05-25'
+        }
+    ];
+    
+    // Seleccionar un pedido aleatorio
+    const randomOrder = sampleOrders[Math.floor(Math.random() * sampleOrders.length)];
+    
+    const result = orderSystem.createOrder(randomOrder);
+    
+    if (result.success) {
+        showNotification('Pedido de ejemplo creado exitosamente', 'success');
+        loadOrders();
+    } else {
+        showNotification(result.message, 'error');
+    }
+}
+</script>
+
+</body>
+</html>

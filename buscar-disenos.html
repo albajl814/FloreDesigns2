@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buscar Diseños - Floré Designs</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;700;900&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<header>
+    <nav class="menu">
+        <h1 class="logo"><a href="index.html">Floré Designs</a></h1>
+        <ul class="menu-principal">
+            <li class="submenu">
+                <a href="buscar-disenos.html">Buscar diseños <span class="dropdown-icon">▼</span></a>
+                <ul class="menu-secundario">
+                    <li><a href="por-tipo-vestido.html">Por tipo de vestido</a></li>
+                    <li><a href="por-evento.html">Por evento</a></li>
+        
+            <!-- Reto: Modo Oscuro -->
+            <li>
+                <button class="btn-dark-mode" onclick="DarkModeModule.toggle()" title="Cambiar tema">
+                    <span class="texto-tema">Modo oscuro</span>
+                </button>
+            </li>
+        </ul>
+            </li>
+            <li><a href="portafolio.html">Portafolio</a></li>
+            <li><a href="citas.html">Citas</a></li>
+            <li class="submenu perfil-menu">
+                <a href="perfil.html">Perfil <span class="dropdown-icon">▼</span></a>
+                <ul class="menu-secundario">
+                    <li class="cliente-menu-item"><a href="perfil.html">Mis datos</a></li>
+                    <li class="cliente-menu-item"><a href="mis-pedidos.html">Mis pedidos</a></li>
+                    <li class="admin-menu-item" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                    <li><a href="#" onclick="auth.logout(); return false;">Cerrar sesion</a></li>
+                </ul>
+            </li>
+            <li class="auth-buttons">
+                <button class="auth-button secondary iniciar-sesion-btn" onclick="openAuthModal('login')">Iniciar sesión</button>
+                <button class="auth-button primary registro-btn" onclick="openAuthModal('register')">Registrarse</button>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div class="breadcrumbs">
+    <ol>
+        <li><a href="index.html">Inicio</a></li>
+        <li class="current">Buscar Diseños</li>
+    </ol>
+</div>
+
+<main style="padding: 4rem 2rem; max-width: 1400px; margin: 0 auto;">
+    
+    <div style="text-align: center; margin-bottom: 3rem;">
+        <h1 style="font-family: var(--font-heading); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 400; color: var(--primary-color); margin-bottom: 1.5rem;">
+            Buscar Diseños
+        </h1>
+        <p style="font-size: 1.125rem; color: var(--text-medium); max-width: 700px; margin: 0 auto;">
+            Encuentra el vestido perfecto usando nuestra búsqueda simple o avanzada
+        </p>
+    </div>
+
+    <!-- Tabs de Búsqueda -->
+    <div style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem;">
+        <button id="simpleTab" class="search-tab active" onclick="switchSearchTab('simple')">
+            Búsqueda Simple
+        </button>
+        <button id="advancedTab" class="search-tab" onclick="switchSearchTab('advanced')">
+            Búsqueda Avanzada
+        </button>
+    </div>
+
+    <!-- BÚSQUEDA SIMPLE -->
+    <div id="simpleSearch" class="search-panel active">
+        <div class="adv-search-box" style="padding: 2.5rem; border-radius: 8px; box-shadow: var(--shadow-md); margin-bottom: 3rem;">
+            <h2 style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--primary-color); margin-bottom: 1.5rem;">
+                Búsqueda Simple por Palabra Clave
+            </h2>
+            <form id="simpleSearchForm" onsubmit="realizarBusquedaSimple(event)" style="display: flex; gap: 1rem; align-items: flex-end;">
+                <div style="flex: 1;">
+                    <label for="simpleQuery" class="adv-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                        ¿Qué estás buscando?
+                    </label>
+                    <input 
+                        type="text" 
+                        id="simpleQuery" 
+                        placeholder="Ej: elegante, rosa, novia, encaje..."
+                        class="adv-input" style="width: 100%; padding: 1rem; border: 2px solid var(--border-color, #ddd); border-radius: 4px; font-size: 1rem; transition: border-color 0.3s; background: transparent; color: inherit;"
+                    >
+                    <small style="display: block; margin-top: 0.5rem; color: var(--text-medium);">
+                        Ingresa cualquier palabra clave: color, estilo, ocasión, etc.
+                    </small>
+                </div>
+                <button type="submit" style="padding: 1rem 2.5rem; background: var(--secondary-color); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; transition: background 0.3s; white-space: nowrap;">
+                    Buscar
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- BÚSQUEDA AVANZADA -->
+    <div id="advancedSearch" class="search-panel" style="display: none;">
+        <div class="adv-search-box" style="padding: 2.5rem; border-radius: 8px; box-shadow: var(--shadow-md); margin-bottom: 3rem;">
+            <h2 style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--primary-color); margin-bottom: 1.5rem;">
+                Búsqueda Avanzada con Filtros
+            </h2>
+            <form id="advancedSearchForm" onsubmit="realizarBusquedaAvanzada(event)">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem;">
+                    
+                    <!-- Palabra clave -->
+                    <div>
+                        <label for="advQuery" class="adv-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Palabra clave
+                        </label>
+                        <input 
+                            type="text" 
+                            id="advQuery" 
+                            placeholder="Buscar..."
+                            class="adv-input"
+                            style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color, #ddd); border-radius: 4px; font-size: 1rem; background: transparent; color: inherit;"
+                        >
+                    </div>
+
+                    <!-- Categoría -->
+                    <div>
+                        <label for="advCategoria" class="adv-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Categoría
+                        </label>
+                        <select 
+                            id="advCategoria"
+                            class="adv-input"
+                            style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color, #ddd); border-radius: 4px; font-size: 1rem; cursor: pointer; background: transparent; color: inherit;"
+                        >
+                            <option value="">Todas las categorías</option>
+                            <option value="novia">Vestidos de Novia</option>
+                            <option value="xv-anos">Vestidos de XV Años</option>
+                            <option value="gala">Vestidos de Gala</option>
+                            <option value="coctel">Vestidos de Cóctel</option>
+                            <option value="madrina">Vestidos de Madrina</option>
+                        </select>
+                    </div>
+
+                    <!-- Evento -->
+                    <div>
+                        <label for="advEvento" class="adv-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Tipo de Evento
+                        </label>
+                        <select 
+                            id="advEvento"
+                            class="adv-input"
+                            style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color, #ddd); border-radius: 4px; font-size: 1rem; cursor: pointer; background: transparent; color: inherit;"
+                        >
+                            <option value="">Todos los eventos</option>
+                            <option value="boda">Boda</option>
+                            <option value="quince-anos">XV Años</option>
+                            <option value="gala">Gala</option>
+                            <option value="coctel">Cóctel</option>
+                        </select>
+                    </div>
+
+                    <!-- Color -->
+                    <div>
+                        <label for="advColor" class="adv-label" style="display: block; margin-bottom: 0.5rem; font-weight: 600;">
+                            Color
+                        </label>
+                        <select 
+                            id="advColor"
+                            class="adv-input"
+                            style="width: 100%; padding: 0.875rem; border: 2px solid var(--border-color, #ddd); border-radius: 4px; font-size: 1rem; cursor: pointer; background: transparent; color: inherit;"
+                        >
+                            <option value="">Todos los colores</option>
+                            <option value="blanco">Blanco</option>
+                            <option value="marfil">Marfil</option>
+                            <option value="crema">Crema</option>
+                            <option value="rosa">Rosa</option>
+                            <option value="rojo">Rojo</option>
+                            <option value="azul">Azul</option>
+                            <option value="negro">Negro</option>
+                            <option value="verde">Verde</option>
+                            <option value="fucsia">Fucsia</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+                    <button type="button" onclick="limpiarFiltros()" class="btn-limpiar" style="padding: 1rem 2rem; background: var(--bg-medium, #f5f5f5); color: inherit; border: 1px solid var(--border-color, #ddd); border-radius: 4px; font-weight: 600; cursor: pointer;">
+                        Limpiar Filtros
+                    </button>
+                    <button type="submit" style="padding: 1rem 2.5rem; background: var(--secondary-color); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">
+                        Buscar con Filtros
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Resultados -->
+    <div id="searchResults" style="display: none;">
+        <!-- Estadísticas -->
+        <div id="searchStats" style="background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; text-align: center;">
+        </div>
+
+        <!-- Grid de resultados -->
+        <div id="resultsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem;">
+        </div>
+
+        <!-- Sin resultados -->
+        <div id="noResults" style="display: none; text-align: center; padding: 4rem 2rem;">
+            
+            <h3 style="font-family: var(--font-heading); font-size: 1.8rem; color: var(--primary-color); margin-bottom: 1rem;">
+                No se encontraron resultados
+            </h3>
+            <p style="color: var(--text-medium); margin-bottom: 2rem;">
+                Intenta ajustar tus filtros o realizar una búsqueda diferente
+            </p>
+            <button onclick="limpiarFiltros()" style="padding: 1rem 2rem; background: var(--secondary-color); color: white; border: none; border-radius: 4px; font-weight: 600; cursor: pointer;">
+                Limpiar Filtros
+            </button>
+        </div>
+    </div>
+
+    <!-- Enlaces Rápidos -->
+    <div style="margin-top: 5rem; padding: 4rem; background: linear-gradient(135deg, var(--bg-dark), var(--primary-light)); color: white; border-radius: 4px; text-align: center;">
+        <h2 style="font-family: var(--font-heading); font-size: 2.5rem; margin-bottom: 1.5rem; color: white;">
+            ¿Tienes una visión única?
+        </h2>
+        <p style="font-size: 1.125rem; line-height: 1.8; max-width: 700px; margin: 0 auto 2.5rem; opacity: 0.95;">
+            Agenda una consultoría personalizada y trabajemos juntas para crear el vestido de tus sueños desde cero.
+        </p>
+        <a href="citas.html" style="display: inline-block; padding: 1.2rem 3rem; background: var(--secondary-color); color: var(--primary-color); text-decoration: none; font-family: var(--font-accent); font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.875rem; border-radius: 0; transition: all var(--transition-normal);">
+            Agendar Consultoría
+        </a>
+    </div>
+
+</main>
+
+<style>
+.search-tab {
+    padding: 1rem 2rem;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    color: var(--text-dark);
+}
+
+.search-tab:hover {
+    border-color: var(--secondary-color);
+}
+
+.search-tab.active {
+    background: var(--secondary-color);
+    color: white;
+    border-color: var(--secondary-color);
+}
+
+.search-panel {
+    animation: fadeIn 0.3s;
+}
+
+.price-preset {
+    padding: 0.5rem 1rem;
+    background: #f5f5f5;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: all 0.3s;
+}
+
+.price-preset:hover {
+    background: var(--secondary-light);
+    border-color: var(--secondary-color);
+    color: var(--secondary-color);
+}
+
+.result-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.result-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.result-image {
+    width: 100%;
+    height: 250px;
+    background: linear-gradient(135deg, var(--accent-light), var(--tertiary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+}
+
+.result-content {
+    padding: 1.5rem;
+}
+
+.result-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 0.75rem;
+}
+
+.result-description {
+    color: var(--text-medium);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.result-details {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.result-badge {
+    padding: 0.25rem 0.75rem;
+    background: var(--bg-light);
+    border-radius: 12px;
+    font-size: 0.875rem;
+    color: var(--text-medium);
+}
+
+.result-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.result-button {
+    display: block;
+    width: 100%;
+    padding: 0.875rem;
+    background: var(--primary-color);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.result-button:hover {
+    background: var(--secondary-color);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+<script>
+// Variables globales
+let currentSearchType = 'simple';
+
+// Cambiar entre tabs
+function switchSearchTab(type) {
+    currentSearchType = type;
+    
+    // Actualizar tabs
+    document.getElementById('simpleTab').classList.toggle('active', type === 'simple');
+    document.getElementById('advancedTab').classList.toggle('active', type === 'advanced');
+    
+    // Mostrar/ocultar paneles
+    document.getElementById('simpleSearch').style.display = type === 'simple' ? 'block' : 'none';
+    document.getElementById('advancedSearch').style.display = type === 'advanced' ? 'block' : 'none';
+    
+    // Ocultar resultados al cambiar de tab
+    document.getElementById('searchResults').style.display = 'none';
+}
+
+// Base de datos local de vestidos (espejo de search-api.php)
+const VESTIDOS_DB = [
+    { id:1, nombre:'Vestido de Novia Clásico', descripcion:'Elegante vestido de novia con encaje francés y cola larga', categoria:'novia', evento:'boda', color:'Blanco', disponible:true },
+    { id:2, nombre:'Vestido de Gala Sirena', descripcion:'Diseño sirena con pedrería y escote corazón', categoria:'gala', evento:'gala', color:'Rojo', disponible:true },
+    { id:3, nombre:'Vestido de XV Años Rosa', descripcion:'Vestido de quince años estilo princesa con tul y cristales', categoria:'xv-anos', evento:'quince-anos', color:'Rosa', disponible:true },
+    { id:4, nombre:'Vestido de Novia Minimalista', descripcion:'Diseño moderno y minimalista con satén italiano', categoria:'novia', evento:'boda', color:'Marfil', disponible:true },
+    { id:5, nombre:'Vestido Cóctel Negro', descripcion:'Vestido corto elegante para eventos sociales', categoria:'coctel', evento:'coctel', color:'Negro', disponible:true },
+    { id:6, nombre:'Vestido de Gala Largo', descripcion:'Vestido largo con lentejuelas y escote en V', categoria:'gala', evento:'gala', color:'Azul', disponible:true },
+    { id:7, nombre:'Vestido de XV Años Azul', descripcion:'Vestido de quince años con bordados florales', categoria:'xv-anos', evento:'quince-anos', color:'Azul cielo', disponible:true },
+    { id:8, nombre:'Vestido de Novia Bohemio', descripcion:'Estilo boho chic con encaje y manga larga', categoria:'novia', evento:'boda', color:'Crema', disponible:true },
+    { id:9, nombre:'Vestido Cóctel Fucsia', descripcion:'Diseño juvenil y moderno para eventos casuales', categoria:'coctel', evento:'coctel', color:'Fucsia', disponible:true },
+    { id:10, nombre:'Vestido de Madrina Elegante', descripcion:'Vestido largo para madrina con detalles dorados', categoria:'madrina', evento:'boda', color:'Verde esmeralda', disponible:true }
+];
+
+// Emojis por categoría
+const CATEGORIA_ICONS = { novia:'Novia', 'xv-anos':'XV', gala:'Gala', coctel:'Coctel', madrina:'Madrina' };
+
+// Búsqueda simple
+function realizarBusquedaSimple(event) {
+    event.preventDefault();
+    const query = document.getElementById('simpleQuery').value.trim();
+    if (!query) {
+        mostrarError('Por favor ingresa un término de búsqueda');
+        return;
+    }
+    const resultados = buscarLocal({ q: query });
+    mostrarResultados({ total_resultados: resultados.length, resultados }, { Búsqueda: query });
+}
+
+// Búsqueda avanzada
+function realizarBusquedaAvanzada(event) {
+    event.preventDefault();
+    const query    = document.getElementById('advQuery').value.trim();
+    const categoria = document.getElementById('advCategoria').value;
+    const evento   = document.getElementById('advEvento').value;
+    const color    = document.getElementById('advColor').value;
+
+    if (!query && !categoria && !evento && !color) {
+        mostrarError('Selecciona al menos un filtro o escribe una palabra clave');
+        return;
+    }
+
+    const resultados = buscarLocal({ q: query, categoria, evento, color });
+    const params = {};
+    if (query) params['Búsqueda'] = query;
+    if (categoria) params['Categoría'] = getCategoriaLabel(categoria);
+    if (evento) params['Evento'] = getEventoLabel(evento);
+    if (color) params['Color'] = color;
+    mostrarResultados({ total_resultados: resultados.length, resultados }, params);
+}
+
+// Motor de búsqueda local
+function buscarLocal({ q = '', categoria = '', evento = '', color = '' }) {
+    return VESTIDOS_DB.filter(v => {
+        const texto = (v.nombre + ' ' + v.descripcion + ' ' + v.color).toLowerCase();
+        const matchQ = !q || texto.includes(q.toLowerCase());
+        const matchCat = !categoria || v.categoria === categoria;
+        const matchEv = !evento || v.evento === evento;
+        const matchColor = !color || v.color.toLowerCase().includes(color.toLowerCase());
+        return matchQ && matchCat && matchEv && matchColor;
+    });
+}
+
+function mostrarError(msg) {
+    alert(msg);
+}
+
+// Mostrar resultados
+function mostrarResultados(data, params) {
+    const resultsSection = document.getElementById('searchResults');
+    const statsDiv = document.getElementById('searchStats');
+    const gridDiv = document.getElementById('resultsGrid');
+    const noResultsDiv = document.getElementById('noResults');
+    
+    resultsSection.style.display = 'block';
+    
+    // Scroll a resultados
+    resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // Mostrar estadísticas
+    const paramsText = Object.entries(params)
+        .filter(([key, value]) => value)
+        .map(([key, value]) => `${key}: "${value}"`)
+        .join(' | ');
+    
+    statsDiv.innerHTML = `
+        <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem;">
+            ${data.total_resultados} resultado${data.total_resultados !== 1 ? 's' : ''} encontrado${data.total_resultados !== 1 ? 's' : ''}
+        </h3>
+        <p style="opacity: 0.9;">${paramsText || 'Todos los vestidos'}</p>
+    `;
+    
+    if (data.total_resultados === 0) {
+        gridDiv.style.display = 'none';
+        noResultsDiv.style.display = 'block';
+    } else {
+        gridDiv.style.display = 'grid';
+        noResultsDiv.style.display = 'none';
+        
+        // Generar cards de resultados
+        gridDiv.innerHTML = data.resultados.map(vestido => `
+            <div class="result-card" style="animation: fadeInUp 0.4s ease both;">
+                <div class="result-image" style="height:160px; background: linear-gradient(135deg, var(--primary-color), var(--secondary-color)); display:flex; align-items:center; justify-content:center; font-size:1rem; font-weight:700; color:white; letter-spacing:0.1em; text-transform:uppercase; border-radius:8px 8px 0 0;">
+                    ${CATEGORIA_ICONS[vestido.categoria] || getCategoriaLabel(vestido.categoria)}
+                </div>
+                <div class="result-content">
+                    <h3 class="result-title">${vestido.nombre}</h3>
+                    <p class="result-description">${vestido.descripcion}</p>
+                    <div class="result-details">
+                        <span class="result-badge">${getCategoriaLabel(vestido.categoria)}</span>
+                        <span class="result-badge">${getEventoLabel(vestido.evento)}</span>
+                        <span class="result-badge" style="background: rgba(var(--secondary-rgb, 180,140,60),0.15);">${vestido.color}</span>
+                    </div>
+                    <a href="citas.html" class="result-button" style="margin-top:1.25rem; display:inline-block; padding:0.75rem 1.5rem; background:var(--secondary-color); color:white; border-radius:4px; text-decoration:none; font-weight:600; transition:opacity 0.2s;">Agendar Cita</a>
+                </div>
+            </div>
+        `).join('');
+    }
+}
+
+// Helpers
+function getCategoriaLabel(categoria) {
+    const labels = {
+        'novia': 'Novia',
+        'xv-anos': 'XV Años',
+        'gala': 'Gala',
+        'coctel': 'Cóctel',
+        'madrina': 'Madrina'
+    };
+    return labels[categoria] || categoria;
+}
+
+function getEventoLabel(evento) {
+    const labels = {
+        'boda': 'Boda',
+        'quince-anos': 'XV Años',
+        'gala': 'Gala',
+        'coctel': 'Cóctel'
+    };
+    return labels[evento] || evento;
+}
+
+// setRangoPrecio eliminado - sin filtro de precio
+
+function limpiarFiltros() {
+    document.getElementById('advQuery').value = '';
+    document.getElementById('advCategoria').value = '';
+    document.getElementById('advEvento').value = '';
+    const colorEl = document.getElementById('advColor');
+    if (colorEl) colorEl.value = '';
+    document.getElementById('simpleQuery').value = '';
+    document.getElementById('searchResults').style.display = 'none';
+}
+</script>
+
+<!-- Modal de Autenticación -->
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/darkmode.js"></script>
+<script src="js/dom.js"></script>
+<script src="js/validaciones.js"></script>
+<script src="js/captcha.js"></script>
+<script src="js/auth.api.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>

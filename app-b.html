@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flore Atelier – App B (SSO)</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent:  #8e44ad;
+            --bg:      #f4f0f8;
+            --card:    #ffffff;
+            --text:    #2c2c2c;
+            --text2:   #666;
+            --border:  #ddd;
+            --success: #27ae60;
+            --error:   #c0392b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* Nav */
+        nav {
+            background: var(--primary);
+            color: white;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        nav .brand { font-size: 1.2rem; font-weight: 700; letter-spacing: .05em; }
+        nav .badge {
+            background: var(--accent);
+            color: white;
+            font-size: .7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        nav .user-info { font-size: .88rem; opacity: .85; }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .hero h1 { font-size: 2rem; margin-bottom: .5rem; }
+        .hero p  { opacity: .85; }
+        .sso-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: rgba(255,255,255,.15);
+            border: 1px solid rgba(255,255,255,.3);
+            border-radius: 20px;
+            padding: .35rem 1rem;
+            font-size: .82rem;
+            margin-top: 1rem;
+        }
+
+        /* Content */
+        .container { max-width: 960px; margin: 0 auto; padding: 2rem 1rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card {
+            background: var(--card);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 12px rgba(0,0,0,.08);
+        }
+        .card h2 { font-size: 1.1rem; margin-bottom: 1rem; color: var(--primary); }
+        .card h3 { font-size: 1rem; margin-bottom: .75rem; }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: .5rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .9rem;
+        }
+        .info-row:last-child { border-bottom: none; }
+        .info-row .label { color: var(--text2); }
+        .info-row .value { font-weight: 600; }
+
+        .tag {
+            display: inline-block;
+            padding: .2rem .6rem;
+            border-radius: 4px;
+            font-size: .78rem;
+            font-weight: 700;
+        }
+        .tag.sso    { background: #f0e6ff; color: var(--accent); }
+        .tag.activo { background: #e8f8ef; color: var(--success); }
+
+        .timeline { list-style: none; }
+        .timeline li {
+            display: flex;
+            gap: .75rem;
+            padding: .6rem 0;
+            border-bottom: 1px solid var(--border);
+            font-size: .88rem;
+            align-items: flex-start;
+        }
+        .timeline li:last-child { border-bottom: none; }
+        .timeline .dot {
+            width: 8px; height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: .6rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: .88rem;
+            text-decoration: none;
+            transition: opacity .2s;
+        }
+        .btn:hover { opacity: .85; }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-outline  { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+
+        /* Estado de carga */
+        #loading, #error-panel {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+        .spinner {
+            width: 40px; height: 40px;
+            border: 4px solid #ddd;
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #main-content { display: none; }
+    </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+    <div>
+        <span class="brand">✨ Flore Atelier</span>
+        <span class="badge">App B</span>
+    </div>
+    <div class="user-info" id="navUser">Cargando...</div>
+</nav>
+
+<!-- CARGANDO -->
+<div id="loading">
+    <div class="spinner"></div>
+    <p style="color:#666;">Verificando sesión SSO...</p>
+</div>
+
+<!-- ERROR -->
+<div id="error-panel" style="display:none;">
+    <div style="font-size:3rem; margin-bottom:1rem;">🔒</div>
+    <h2 style="margin-bottom:.5rem;">Acceso denegado</h2>
+    <p id="error-msg" style="color:#666; margin-bottom:1.5rem;"></p>
+    <a href="index.html" class="btn btn-primary">Ir a Flore Designs para iniciar sesión</a>
+</div>
+
+<!-- CONTENIDO PRINCIPAL -->
+<div id="main-content">
+    <div class="hero">
+        <h1>Bienvenida a Flore Atelier</h1>
+        <p>Catálogo exclusivo de diseños y gestión de colecciones</p>
+        <div class="sso-badge">
+            🔗 Acceso via Single Sign-On desde Flore Designs
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="grid">
+
+            <!-- Datos del usuario SSO -->
+            <div class="card">
+                <h2>👤 Tu sesión SSO</h2>
+                <div id="ssoInfo"></div>
+                <div style="margin-top:1rem; display:flex; gap:.75rem; flex-wrap:wrap;">
+                    <a href="index.html" class="btn btn-outline">← Volver a Flore Designs</a>
+                </div>
+            </div>
+
+            <!-- Cómo funciona SSO -->
+            <div class="card">
+                <h2>🔑 ¿Cómo funciona el SSO?</h2>
+                <ul class="timeline">
+                    <li>
+                        <div class="dot"></div>
+                        <div><strong>1. Inicio de sesión único</strong><br>
+                        Iniciaste sesión en Flore Designs (App A)</div>
+                    </li>
+                    <li>
+                        <div class="dot"></div>
+                        <div><strong>2. Token generado</strong><br>
+                        App A generó un token SSO temporal de un solo uso</div>
+                    </li>
+                    <li>
+                        <div class="dot"></div>
+                        <div><strong>3. Validación en App B</strong><br>
+                        App B validó el token contra la BD compartida</div>
+                    </li>
+                    <li>
+                        <div class="dot"></div>
+                        <div><strong>4. Acceso concedido</strong><br>
+                        Sin necesidad de volver a introducir credenciales</div>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Catálogo de muestra -->
+            <div class="card" style="grid-column: 1 / -1;">
+                <h2>🎨 Colecciones exclusivas – Flore Atelier</h2>
+                <p style="color:var(--text2); margin-bottom:1rem; font-size:.9rem;">
+                    Contenido exclusivo al que solo puedes acceder desde esta app con sesión SSO activa.
+                </p>
+                <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:1rem;">
+                    <div style="background:var(--bg); border-radius:8px; padding:1rem; text-align:center;">
+                        <div style="font-size:2.5rem; margin-bottom:.5rem;">👗</div>
+                        <strong>Colección Primavera 2026</strong>
+                        <p style="font-size:.82rem; color:var(--text2); margin-top:.25rem;">18 diseños exclusivos</p>
+                    </div>
+                    <div style="background:var(--bg); border-radius:8px; padding:1rem; text-align:center;">
+                        <div style="font-size:2.5rem; margin-bottom:.5rem;">✨</div>
+                        <strong>Alta Costura</strong>
+                        <p style="font-size:.82rem; color:var(--text2); margin-top:.25rem;">Piezas únicas a medida</p>
+                    </div>
+                    <div style="background:var(--bg); border-radius:8px; padding:1rem; text-align:center;">
+                        <div style="font-size:2.5rem; margin-bottom:.5rem;">💍</div>
+                        <strong>Novias 2026</strong>
+                        <p style="font-size:.82rem; color:var(--text2); margin-top:.25rem;">Colección nupcial</p>
+                    </div>
+                    <div style="background:var(--bg); border-radius:8px; padding:1rem; text-align:center;">
+                        <div style="font-size:2.5rem; margin-bottom:.5rem;">🌙</div>
+                        <strong>Eventos de Gala</strong>
+                        <p style="font-size:.82rem; color:var(--text2); margin-top:.25rem;">Vestidos de noche</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+const API = '/FloreDesigns2/api/sso';
+
+async function iniciarSSO() {
+    // Leer el token SSO de la URL
+    const params   = new URLSearchParams(window.location.search);
+    const ssoToken = params.get('sso_token');
+
+    if (!ssoToken) {
+        mostrarError('No se proporcionó un token SSO. Accede desde Flore Designs.');
+        return;
+    }
+
+    try {
+        const res  = await fetch(`${API}/validar.php`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ sso_token: ssoToken })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+            mostrarError(data.error || 'Token SSO inválido o expirado.');
+            return;
+        }
+
+        // Guardar el JWT de App B en sessionStorage
+        sessionStorage.setItem('appb_token',   data.token);
+        sessionStorage.setItem('appb_usuario',  JSON.stringify(data.usuario));
+
+        // Limpiar el token de la URL por seguridad
+        window.history.replaceState({}, '', window.location.pathname);
+
+        mostrarContenido(data.usuario, data.app_origen);
+
+    } catch (err) {
+        mostrarError('Error de conexión. Verifica que XAMPP esté activo.');
+    }
+}
+
+function mostrarContenido(usuario, appOrigen) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('main-content').style.display = 'block';
+    document.getElementById('navUser').textContent = `👤 ${usuario.nombre}`;
+
+    const ahora = new Date().toLocaleString('es-MX');
+    document.getElementById('ssoInfo').innerHTML = `
+        <div class="info-row">
+            <span class="label">Usuario</span>
+            <span class="value">${usuario.nombre}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Correo</span>
+            <span class="value">${usuario.email}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Rol</span>
+            <span class="value">${usuario.rol}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">App de origen</span>
+            <span class="value">${appOrigen}</span>
+        </div>
+        <div class="info-row">
+            <span class="label">Método de acceso</span>
+            <span class="value"><span class="tag sso">SSO</span></span>
+        </div>
+        <div class="info-row">
+            <span class="label">Estado</span>
+            <span class="value"><span class="tag activo">✓ Activo</span></span>
+        </div>
+        <div class="info-row">
+            <span class="label">Hora de acceso</span>
+            <span class="value">${ahora}</span>
+        </div>
+    `;
+}
+
+function mostrarError(msg) {
+    document.getElementById('loading').style.display    = 'none';
+    document.getElementById('error-panel').style.display = 'block';
+    document.getElementById('error-msg').textContent    = msg;
+}
+
+// Iniciar al cargar la página
+iniciarSSO();
+</script>
+</body>
+</html>

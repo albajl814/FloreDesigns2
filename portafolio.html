@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portafolio - Floré Designs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Lato:wght@300;400;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .filtro-btn {
+            padding: .55rem 1.4rem;
+            border: 1.5px solid var(--border-color, #ddd);
+            background: transparent;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: var(--font-accent, sans-serif);
+            font-size: .78rem;
+            font-weight: 600;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text-medium);
+            transition: all .2s;
+        }
+        .filtro-btn:hover, .filtro-btn.activo {
+            background: var(--primary-color, #1a1a2e);
+            border-color: var(--primary-color, #1a1a2e);
+            color: #C9A961;
+        }
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .portfolio-item {
+            position: relative;
+            aspect-ratio: 3/4;
+            border-radius: 4px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform .3s;
+        }
+        .portfolio-item:hover { transform: translateY(-6px); }
+        .portfolio-item:hover .portfolio-overlay { opacity: 1; }
+        .portfolio-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(26,26,46,.9) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity .3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 1.5rem;
+        }
+        .portfolio-item.oculto-filtro { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="menu">
+        <h1 class="logo"><a href="index.html">Floré Designs</a></h1>
+        <ul class="menu-principal">
+            <li class="submenu">
+                <a href="buscar-disenos.html">Buscar diseños <span class="dropdown-icon">▼</span></a>
+                <ul class="menu-secundario">
+                    <li><a href="por-tipo-vestido.html">Por tipo de vestido</a></li>
+                    <li><a href="por-evento.html">Por evento</a></li>
+                </ul>
+            </li>
+            <li><a href="portafolio.html" style="color: var(--secondary-color);">Portafolio</a></li>
+            <li><a href="citas.html">Citas</a></li>
+            <li class="submenu perfil-menu" style="display:none;">
+                <a href="perfil.html">Perfil <span class="dropdown-icon">▼</span></a>
+                <ul class="menu-secundario">
+                    <li class="cliente-menu-item"><a href="perfil.html">Mis datos</a></li>
+                    <li class="admin-menu-item" style="display:none;"><a href="admin.html">Panel Admin</a></li>
+                    <li><a href="#" onclick="auth.logout(); return false;">Cerrar sesión</a></li>
+                </ul>
+            </li>
+            <li class="auth-buttons">
+                <button class="auth-button secondary" onclick="openAuthModal('login')">Iniciar sesión</button>
+                <button class="auth-button primary" onclick="openAuthModal('register')">Registrarse</button>
+            </li>
+            <li><button class="btn-dark-mode" onclick="DarkModeModule.toggle()"><span class="texto-tema">Modo oscuro</span></button></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+
+    <!-- Hero -->
+    <section style="padding:8rem 2rem 5rem;background:#1a1a2e;color:white;text-align:center;position:relative;overflow:hidden;">
+        <div style="position:absolute;inset:0;opacity:.07;background:radial-gradient(ellipse at 20% 60%, #C9A961 0%, transparent 55%), radial-gradient(ellipse at 80% 40%, #6c5ce7 0%, transparent 55%);pointer-events:none;"></div>
+        <div style="position:relative;z-index:1;max-width:700px;margin:0 auto;">
+            <p style="font-family:var(--font-accent);font-size:.8rem;letter-spacing:.25em;text-transform:uppercase;color:#C9A961;margin-bottom:1.5rem;">Nuestro trabajo</p>
+            <h1 style="font-family:var(--font-heading);font-size:clamp(3rem,7vw,5rem);font-weight:300;line-height:1.1;margin-bottom:1.5rem;">Portafolio</h1>
+            <p style="color:rgba(255,255,255,.65);font-size:1.1rem;line-height:1.8;">Cada vestido es una historia. Aquí encontrarás una selección de las piezas que hemos creado con amor para nuestras clientas.</p>
+        </div>
+    </section>
+
+    <!-- Galería -->
+    <section style="padding:6rem 2rem;max-width:1300px;margin:0 auto;">
+
+        <!-- Filtros -->
+        <div style="display:flex;gap:.75rem;flex-wrap:wrap;justify-content:center;margin-bottom:3.5rem;">
+            <button class="filtro-btn activo" onclick="filtrar('todos', this)">Todos</button>
+            <button class="filtro-btn" onclick="filtrar('novia', this)">Novias</button>
+            <button class="filtro-btn" onclick="filtrar('quinceanera', this)">Quinceañeras</button>
+            <button class="filtro-btn" onclick="filtrar('gala', this)">Gala</button>
+            <button class="filtro-btn" onclick="filtrar('graduacion', this)">Graduación</button>
+        </div>
+
+        <!-- Grid de piezas -->
+        <div class="portfolio-grid" id="portfolio-grid">
+
+            <!-- Novias -->
+            <div class="portfolio-item" data-categoria="novia" style="background:linear-gradient(135deg,rgba(201,169,97,.25),rgba(26,26,46,.4));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">N·01</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Novias</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Sofía</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Encaje francés · Corte sirena</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="quinceanera" style="background:linear-gradient(135deg,rgba(233,69,96,.2),rgba(201,169,97,.2));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">Q·01</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Quinceañeras</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Valentina</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Tul bordado · Rosa palo</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="gala" style="background:linear-gradient(135deg,rgba(108,92,231,.25),rgba(26,26,46,.3));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">G·01</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Gala</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Daniela</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Seda natural · Negro elegante</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="novia" style="background:linear-gradient(135deg,rgba(201,169,97,.18),rgba(108,92,231,.15));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">N·02</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Novias</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Isabella</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Organza · Escote corazón</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="graduacion" style="background:linear-gradient(135deg,rgba(0,184,148,.15),rgba(201,169,97,.2));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">GR·01</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Graduación</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Andrea</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Gasa · Verde esmeralda</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="quinceanera" style="background:linear-gradient(135deg,rgba(253,121,168,.2),rgba(108,92,231,.2));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">Q·02</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Quinceañeras</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Camila</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Pedrería · Azul cielo</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="gala" style="background:linear-gradient(135deg,rgba(201,169,97,.2),rgba(233,69,96,.15));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">G·02</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Gala</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Mariana</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Terciopelo · Borgoña</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="novia" style="background:linear-gradient(135deg,rgba(26,26,46,.3),rgba(201,169,97,.2));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">N·03</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Novias</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Renata</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Mikado · Corte princesa</p>
+                </div>
+            </div>
+
+            <div class="portfolio-item" data-categoria="graduacion" style="background:linear-gradient(135deg,rgba(108,92,231,.2),rgba(253,121,168,.15));">
+                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">GR·02</div>
+                <div class="portfolio-overlay">
+                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Graduación</span>
+                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Lucia</h3>
+                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Chiffon · Champagne</p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Mensaje cuando no hay resultados -->
+        <p id="portfolio-vacio" style="display:none;text-align:center;padding:4rem;color:var(--text-medium);font-family:var(--font-heading);font-size:1.3rem;">No hay piezas en esta categoría aún.</p>
+
+    </section>
+
+    <!-- CTA agendar cita -->
+    <section style="padding:5rem 2rem;background:#1a1a2e;color:white;text-align:center;">
+        <p style="font-family:var(--font-accent);font-size:.75rem;letter-spacing:.2em;text-transform:uppercase;color:#C9A961;margin-bottom:1rem;">¿Te inspiraste?</p>
+        <h2 style="font-family:var(--font-heading);font-size:clamp(2rem,5vw,3.5rem);font-weight:300;margin-bottom:1.5rem;">Creemos tu vestido ideal</h2>
+        <p style="color:rgba(255,255,255,.65);font-size:1rem;margin-bottom:2.5rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.8;">Agenda una consultoría gratuita y cuéntanos tu sueño. Nosotras lo hacemos realidad.</p>
+        <a href="citas.html" style="padding:1.1rem 3rem;background:#C9A961;color:#1a1a2e;text-decoration:none;font-family:var(--font-accent);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.875rem;display:inline-block;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Agendar cita</a>
+    </section>
+
+    <!-- ========================================
+         CARRUSEL DE COMENTARIOS
+         Misma estructura que el carrusel de
+         testimonios en index.html
+    ======================================== -->
+    <section style="padding: 8rem 2rem; background: #fafaf8;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <div class="oculto" style="text-align: center; margin-bottom: 4rem;">
+                <p style="font-family: var(--font-accent); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--secondary-color); margin-bottom: 1rem;">
+                    Comentarios
+                </p>
+                <h2 style="font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; color: var(--primary-color);">
+                    Lo que dicen nuestras clientas
+                </h2>
+            </div>
+
+            <div id="carrusel-comentarios" class="carrusel-contenedor oculto retraso-1"
+                 style="background: white; border-radius: 4px; box-shadow: var(--shadow-md);">
+
+                <div class="carrusel-pista">
+
+                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
+                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
+                            "Jamas imagine que mi vestido de novia pudiera ser tan perfecto. Cada detalle fue exactamente como lo habia sonado. El equipo de Flore Designs supero todas mis expectativas."
+                        </blockquote>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); flex-shrink: 0;"></div>
+                            <div>
+                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Sofia Martinez</strong>
+                                <span style="font-size: 0.8rem; color: var(--text-medium);">Novia · Boda 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
+                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
+                            "Mi vestido de XV anos fue la envidia de todos en la fiesta. La atencion personalizada y la calidad de las telas son incomparables. Definitivamente volvere para mi graduacion."
+                        </blockquote>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), var(--secondary-color)); flex-shrink: 0;"></div>
+                            <div>
+                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Valentina Rios</strong>
+                                <span style="font-size: 0.8rem; color: var(--text-medium);">Quinceañera · 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
+                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
+                            "Para la gala de fin de ano necesitaba algo unico y exclusivo. Flore Designs creo un vestido que combino elegancia y personalidad. Recibi cumplidos toda la noche."
+                        </blockquote>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6c5ce7, var(--secondary-color)); flex-shrink: 0;"></div>
+                            <div>
+                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Daniela Fuentes</strong>
+                                <span style="font-size: 0.8rem; color: var(--text-medium);">Gala · 2023</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
+                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
+                            "El proceso de creacion fue una experiencia increible. Desde la primera consulta hasta la entrega final, senti que mi vestido era verdaderamente unico. Arte puro."
+                        </blockquote>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--secondary-color), #6c5ce7); flex-shrink: 0;"></div>
+                            <div>
+                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Isabella Torres</strong>
+                                <span style="font-size: 0.8rem; color: var(--text-medium);">Clienta recurrente</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
+                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
+                            "Busque mucho tiempo un lugar que entendiera exactamente lo que queria para mi graduacion. Flore Designs no solo lo entendio, lo supero. Mi vestido fue perfecto."
+                        </blockquote>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #00b894, var(--secondary-color)); flex-shrink: 0;"></div>
+                            <div>
+                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Andrea Solis</strong>
+                                <span style="font-size: 0.8rem; color: var(--text-medium);">Graduación · 2024</span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button class="carrusel-btn anterior" aria-label="Comentario anterior">&#8592;</button>
+                <button class="carrusel-btn siguiente" aria-label="Siguiente comentario">&#8594;</button>
+                <div class="carrusel-indicadores"></div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- Footer -->
+<footer style="background:#0d0d1a;color:rgba(255,255,255,.85);">
+    <div style="height:3px;background:linear-gradient(90deg,transparent,#C9A961,transparent);"></div>
+    <div style="max-width:1300px;margin:0 auto;padding:2.5rem 2rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;">
+        <p style="font-family:var(--font-heading);font-size:1.2rem;color:#C9A961;margin:0;">Floré Designs</p>
+        <nav style="display:flex;gap:2rem;flex-wrap:wrap;">
+            <a href="index.html"      style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Inicio</a>
+            <a href="nosotros.html"   style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Nosotros</a>
+            <a href="contacto.html"   style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Contacto</a>
+            <a href="terminos.html"   style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Términos</a>
+            <a href="privacidad.html" style="color:rgba(255,255,255,.5);text-decoration:none;font-size:.85rem;" onmouseover="this.style.color='#C9A961'" onmouseout="this.style.color='rgba(255,255,255,.5)'">Privacidad</a>
+        </nav>
+        <p style="font-size:.78rem;color:rgba(255,255,255,.3);">&copy; 2026 Floré Designs.</p>
+    </div>
+</footer>
+
+<script src="js/animations.js"></script>
+<script src="js/carousel.js"></script>
+<script src="js/darkmode.js"></script>
+<script src="js/auth.api.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    AnimationsModule.iniciar();
+
+    CarouselModule.inicializar('#carrusel-comentarios', {
+        autoplay: true,
+        intervalo: 6000
+    });
+});
+
+function filtrar(categoria, btnEl) {
+    document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+    btnEl.classList.add('activo');
+
+    const items = document.querySelectorAll('.portfolio-item');
+    let visibles = 0;
+
+    items.forEach(item => {
+        const coincide = categoria === 'todos' || item.dataset.categoria === categoria;
+        item.classList.toggle('oculto-filtro', !coincide);
+        if (coincide) visibles++;
+    });
+
+    document.getElementById('portfolio-vacio').style.display = visibles === 0 ? 'block' : 'none';
+}
+</script>
+
+<div id="authModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header" style="position: relative;">
+            <button class="close-modal" onclick="closeAuthModal()">×</button>
+            <h2>Bienvenido</h2>
+            
+            <!-- Pestaña Admin arriba del todo -->
+            <div style="border-bottom: 2px solid #1a1a2e; margin-bottom: 0.5rem; padding-bottom: 0;">
+                <button id="adminTab" class="modal-tab" onclick="switchAuthTab('admin')" style="width: 100%; padding: 0.6rem; background: #1a1a2e; color: #C9A961; border: none; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s;">
+                    Acceso Administrador
+                </button>
+            </div>
+            <!-- Pestanas de usuario -->
+            <div class="modal-tabs">
+                <button id="loginTab" class="modal-tab active" onclick="switchAuthTab('login')">Iniciar sesion</button>
+                <button id="registerTab" class="modal-tab" onclick="switchAuthTab('register')">Registrarse</button>
+            </div>
+        </div>
+
+        <div class="modal-body">
+            
+            <!-- Formulario de inicio de sesión -->
+            <div id="loginForm" class="tab-content active">
+                <form onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label for="loginEmail">Correo electrónico</label>
+                        <input type="email" id="loginEmail" placeholder="tu@email.com" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loginPassword">Contraseña</label>
+                        <input type="password" id="loginPassword" placeholder="Tu contraseña" required>
+                    </div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Iniciar sesión
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>Para probar: <strong>demo@floredesigns.com</strong> / <strong>demo123</strong></p>
+                        <p style="margin-top: 0.5rem;">No tienes cuenta? <a href="#" onclick="switchAuthTab('register'); return false;" style="color: var(--primary-color); font-weight: 500;">Registrate aqui</a></p>
+                        <p style="margin-top: 0.5rem;"><a href="recuperar.html" style="color: var(--text-medium); font-size: 0.82rem;">¿Olvidaste tu contraseña?</a></p>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Formulario de registro -->
+            <div id="registerForm" class="tab-content">
+                <form onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label for="registerNombre">Nombre completo *</label>
+                        <input type="text" id="registerNombre"
+                               placeholder="Tu nombre completo"
+                               pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,}"
+                               title="Solo letras y espacios, mínimo 2 caracteres"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerEmail">Correo electrónico *</label>
+                        <input type="email" id="registerEmail"
+                               placeholder="tu@email.com"
+                               pattern="[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}"
+                               title="Ingresa un correo válido: nombre@dominio.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerTelefono">Teléfono *</label>
+                        <input type="tel" id="registerTelefono"
+                               placeholder="(449) 123-4567"
+                               pattern="(\(\d{3}\)\s?\d{3}-\d{4}|\d{10})"
+                               title="Formato: (449) 123-4567 o 10 dígitos"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerPassword">Contraseña *</label>
+                        <input type="password" id="registerPassword"
+                               placeholder="Mínimo 6 caracteres, letras y números"
+                               minlength="6"
+                               pattern="(?=.*[A-Za-z])(?=.*\d).{6,}"
+                               title="Al menos 6 caracteres, una letra y un número"
+                               required
+                               oninput="ValidacionesModule && actualizarFuerzaPassword(this.value)">
+                        <!-- Indicador visual de fuerza de contraseña -->
+                        <div class="pwd-fuerza" id="pwdFuerza"></div>
+                        <span class="pwd-fuerza-texto" id="pwdFuerzaTexto" style="color:#888;"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirmar contraseña *</label>
+                        <input type="password" id="registerConfirmPassword"
+                               placeholder="Repite tu contraseña"
+                               minlength="6"
+                               required>
+                    </div>
+
+                    <!-- ========================================
+                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         Pregunta matematica generada aleatoriamente.
+                         El formulario no se envia si falla.
+                    ======================================== -->
+                    <div id="captchaContenedor"></div>
+
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem;">
+                        Crear cuenta
+                    </button>
+
+                    <div style="text-align: center; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); color: var(--text-medium); font-size: 0.875rem;">
+                        <p>¿Ya tienes cuenta? <a href="#" onclick="switchAuthTab('login'); return false;" style="color: var(--primary-color); font-weight: 500;">Inicia sesión aquí</a></p>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Formulario de inicio de sesion como Administrador -->
+            <div id="adminForm" class="tab-content" style="display: none;">
+                <div style="text-align: center; margin-bottom: 1.5rem; padding: 1rem; background: #1a1a2e; border-radius: 8px;">
+                    <p style="color: #C9A961; font-family: var(--font-accent); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; margin: 0;">
+                        Area Restringida - Solo Personal Autorizado
+                    </p>
+                </div>
+                <form onsubmit="handleLoginAdmin(event)">
+                    <div class="form-group">
+                        <label for="adminUsuario">Usuario</label>
+                        <input type="text" id="adminUsuario" placeholder="Usuario administrador" required autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="adminPassword">Contrasena</label>
+                        <input type="password" id="adminPassword" placeholder="Contrasena de administrador" required>
+                    </div>
+                    <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; background: #1a1a2e; border-color: #1a1a2e;">
+                        Ingresar al Panel
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
