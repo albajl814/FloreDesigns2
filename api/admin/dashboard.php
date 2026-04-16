@@ -1,9 +1,12 @@
 <?php
 // api/admin/dashboard.php
-// GET → estadísticas del dashboard: citas, pedidos, clientes, actividad reciente
+
 require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/jwt.php';
 require_once __DIR__ . '/../utils/helpers.php';
+
+// Protección de ruta
+$u = requireAuth(['admin','superadmin']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { responder(['ok' => true]); }
 

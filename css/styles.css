@@ -1515,4 +1515,8 @@ body, header, section, main, footer,
 [data-tema="oscuro"] #comentarios-comunidad + section p {
     color: #b0a89a !important;
 }
-
+.portfolio-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}

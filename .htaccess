@@ -10,4 +10,4 @@ Deny from all
 </Files>
 
 # Redirigir login si no existe sesión
-DirectoryIndex index.php
+DirectoryIndex index.html

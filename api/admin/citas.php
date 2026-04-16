@@ -7,11 +7,12 @@ require_once __DIR__ . '/../config/database.php';
 require_once __DIR__ . '/../utils/jwt.php';
 require_once __DIR__ . '/../utils/helpers.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { responder(['ok' => true]); }
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { 
+    responder(['ok' => true]); 
+}
 
-$u = requireAuth();
-if (!in_array($u['rol'], ['admin','superadmin','editor'])) responder(['error' => 'Acceso denegado'], 403);
-
+// Protección con roles
+$usuarioToken = requireAuth(['admin','superadmin']);
 $db = Database::conectar();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {

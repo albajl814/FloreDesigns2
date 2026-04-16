@@ -42,6 +42,13 @@
             cursor: pointer;
             transition: transform .3s;
         }
+        .portfolio-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            display: block;
+        }
         .portfolio-item:hover { transform: translateY(-6px); }
         .portfolio-item:hover .portfolio-overlay { opacity: 1; }
         .portfolio-overlay {
@@ -114,92 +121,118 @@
             <button class="filtro-btn" onclick="filtrar('graduacion', this)">Graduación</button>
         </div>
 
-        <!-- Grid de piezas -->
-        <div class="portfolio-grid" id="portfolio-grid">
+       <div class="portfolio-grid" id="portfolio-grid">
 
-            <!-- Novias -->
-            <div class="portfolio-item" data-categoria="novia" style="background:linear-gradient(135deg,rgba(201,169,97,.25),rgba(26,26,46,.4));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">N·01</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Novias</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Sofía</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Encaje francés · Corte sirena</p>
-                </div>
-            </div>
+    <!-- Novias -->
+    <div class="portfolio-item" data-categoria="novia"
+        onclick="abrirDetalle('Vestido Sofía','Encaje francés · Corte sirena','Novias')">
 
-            <div class="portfolio-item" data-categoria="quinceanera" style="background:linear-gradient(135deg,rgba(233,69,96,.2),rgba(201,169,97,.2));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">Q·01</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Quinceañeras</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Valentina</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Tul bordado · Rosa palo</p>
-                </div>
-            </div>
+        <img src="img/vestidos/novia1.jpg">
 
-            <div class="portfolio-item" data-categoria="gala" style="background:linear-gradient(135deg,rgba(108,92,231,.25),rgba(26,26,46,.3));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">G·01</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Gala</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Daniela</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Seda natural · Negro elegante</p>
-                </div>
-            </div>
-
-            <div class="portfolio-item" data-categoria="novia" style="background:linear-gradient(135deg,rgba(201,169,97,.18),rgba(108,92,231,.15));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">N·02</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Novias</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Isabella</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Organza · Escote corazón</p>
-                </div>
-            </div>
-
-            <div class="portfolio-item" data-categoria="graduacion" style="background:linear-gradient(135deg,rgba(0,184,148,.15),rgba(201,169,97,.2));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">GR·01</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Graduación</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Andrea</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Gasa · Verde esmeralda</p>
-                </div>
-            </div>
-
-            <div class="portfolio-item" data-categoria="quinceanera" style="background:linear-gradient(135deg,rgba(253,121,168,.2),rgba(108,92,231,.2));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">Q·02</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Quinceañeras</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Camila</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Pedrería · Azul cielo</p>
-                </div>
-            </div>
-
-            <div class="portfolio-item" data-categoria="gala" style="background:linear-gradient(135deg,rgba(201,169,97,.2),rgba(233,69,96,.15));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">G·02</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Gala</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Mariana</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Terciopelo · Borgoña</p>
-                </div>
-            </div>
-
-            <div class="portfolio-item" data-categoria="novia" style="background:linear-gradient(135deg,rgba(26,26,46,.3),rgba(201,169,97,.2));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">N·03</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Novias</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Renata</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Mikado · Corte princesa</p>
-                </div>
-            </div>
-
-            <div class="portfolio-item" data-categoria="graduacion" style="background:linear-gradient(135deg,rgba(108,92,231,.2),rgba(253,121,168,.15));">
-                <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-size:3rem;font-weight:300;color:rgba(255,255,255,.3);">GR·02</div>
-                <div class="portfolio-overlay">
-                    <span style="font-family:var(--font-accent);font-size:.7rem;letter-spacing:.15em;text-transform:uppercase;color:#C9A961;margin-bottom:.3rem;">Graduación</span>
-                    <h3 style="font-family:var(--font-heading);font-size:1.3rem;color:white;margin:0;">Vestido Lucia</h3>
-                    <p style="font-size:.8rem;color:rgba(255,255,255,.7);margin:.3rem 0 0;">Chiffon · Champagne</p>
-                </div>
-            </div>
-
+        <div class="portfolio-overlay">
+            <span>Novias</span>
+            <h3>Vestido Sofía</h3>
+            <p>Encaje francés · Corte sirena</p>
         </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="quinceanera"
+        onclick="abrirDetalle('Vestido Valentina','Tul bordado · Rosa palo','Quinceañeras')">
+
+        <img src="img/vestidos/quince1.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Quinceañeras</span>
+            <h3>Vestido Valentina</h3>
+            <p>Tul bordado · Rosa palo</p>
+        </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="gala"
+        onclick="abrirDetalle('Vestido Daniela','Seda natural · Negro elegante','Gala')">
+
+        <img src="img/vestidos/gala1.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Gala</span>
+            <h3>Vestido Daniela</h3>
+            <p>Seda natural · Negro elegante</p>
+        </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="novia"
+        onclick="abrirDetalle('Vestido Isabella','Organza · Escote corazón','Novias')">
+
+        <img src="img/vestidos/novia2.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Novias</span>
+            <h3>Vestido Isabella</h3>
+            <p>Organza · Escote corazón</p>
+        </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="graduacion"
+        onclick="abrirDetalle('Vestido Andrea','Gasa · Morado','Graduación')">
+
+        <img src="img/vestidos/grad1.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Graduación</span>
+            <h3>Vestido Andrea</h3>
+            <p>Gasa · Morado</p>
+        </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="quinceanera"
+        onclick="abrirDetalle('Vestido Camila','Pedrería · Azul cielo','Quinceañeras')">
+
+        <img src="img/vestidos/quince2.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Quinceañeras</span>
+            <h3>Vestido Camila</h3>
+            <p>Pedrería · Azul cielo</p>
+        </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="gala"
+        onclick="abrirDetalle('Vestido Mariana','Terciopelo · Rosa','Gala')">
+
+        <img src="img/vestidos/gala2.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Gala</span>
+            <h3>Vestido Mariana</h3>
+            <p>Terciopelo · Rosa</p>
+        </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="novia"
+        onclick="abrirDetalle('Vestido Renata','Mikado · Corte princesa','Novias')">
+
+        <img src="img/vestidos/novia3.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Novias</span>
+            <h3>Vestido Renata</h3>
+            <p>Mikado · Corte princesa</p>
+        </div>
+    </div>
+
+    <div class="portfolio-item" data-categoria="graduacion"
+        onclick="abrirDetalle('Vestido Lucia','Chiffon · Champagne','Graduación')">
+
+        <img src="img/vestidos/grad2.jpg">
+
+        <div class="portfolio-overlay">
+            <span>Graduación</span>
+            <h3>Vestido Lucia</h3>
+            <p>Chiffon · Champagne</p>
+        </div>
+    </div>
+
+</div>
 
         <!-- Mensaje cuando no hay resultados -->
         <p id="portfolio-vacio" style="display:none;text-align:center;padding:4rem;color:var(--text-medium);font-family:var(--font-heading);font-size:1.3rem;">No hay piezas en esta categoría aún.</p>
@@ -213,100 +246,6 @@
         <p style="color:rgba(255,255,255,.65);font-size:1rem;margin-bottom:2.5rem;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.8;">Agenda una consultoría gratuita y cuéntanos tu sueño. Nosotras lo hacemos realidad.</p>
         <a href="citas.html" style="padding:1.1rem 3rem;background:#C9A961;color:#1a1a2e;text-decoration:none;font-family:var(--font-accent);font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.875rem;display:inline-block;transition:opacity .2s;" onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">Agendar cita</a>
     </section>
-
-    <!-- ========================================
-         CARRUSEL DE COMENTARIOS
-         Misma estructura que el carrusel de
-         testimonios en index.html
-    ======================================== -->
-    <section style="padding: 8rem 2rem; background: #fafaf8;">
-        <div style="max-width: 1000px; margin: 0 auto;">
-            <div class="oculto" style="text-align: center; margin-bottom: 4rem;">
-                <p style="font-family: var(--font-accent); font-size: 0.875rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--secondary-color); margin-bottom: 1rem;">
-                    Comentarios
-                </p>
-                <h2 style="font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; color: var(--primary-color);">
-                    Lo que dicen nuestras clientas
-                </h2>
-            </div>
-
-            <div id="carrusel-comentarios" class="carrusel-contenedor oculto retraso-1"
-                 style="background: white; border-radius: 4px; box-shadow: var(--shadow-md);">
-
-                <div class="carrusel-pista">
-
-                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
-                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
-                            "Jamas imagine que mi vestido de novia pudiera ser tan perfecto. Cada detalle fue exactamente como lo habia sonado. El equipo de Flore Designs supero todas mis expectativas."
-                        </blockquote>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--secondary-color), var(--accent-color)); flex-shrink: 0;"></div>
-                            <div>
-                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Sofia Martinez</strong>
-                                <span style="font-size: 0.8rem; color: var(--text-medium);">Novia · Boda 2024</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
-                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
-                            "Mi vestido de XV anos fue la envidia de todos en la fiesta. La atencion personalizada y la calidad de las telas son incomparables. Definitivamente volvere para mi graduacion."
-                        </blockquote>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-color), var(--secondary-color)); flex-shrink: 0;"></div>
-                            <div>
-                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Valentina Rios</strong>
-                                <span style="font-size: 0.8rem; color: var(--text-medium);">Quinceañera · 2024</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
-                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
-                            "Para la gala de fin de ano necesitaba algo unico y exclusivo. Flore Designs creo un vestido que combino elegancia y personalidad. Recibi cumplidos toda la noche."
-                        </blockquote>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #6c5ce7, var(--secondary-color)); flex-shrink: 0;"></div>
-                            <div>
-                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Daniela Fuentes</strong>
-                                <span style="font-size: 0.8rem; color: var(--text-medium);">Gala · 2023</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
-                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
-                            "El proceso de creacion fue una experiencia increible. Desde la primera consulta hasta la entrega final, senti que mi vestido era verdaderamente unico. Arte puro."
-                        </blockquote>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--secondary-color), #6c5ce7); flex-shrink: 0;"></div>
-                            <div>
-                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Isabella Torres</strong>
-                                <span style="font-size: 0.8rem; color: var(--text-medium);">Clienta recurrente</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="carrusel-slide" style="padding: 3rem 5rem;">
-                        <blockquote style="font-family: var(--font-heading); font-size: clamp(1.1rem, 2.5vw, 1.6rem); font-weight: 300; color: var(--primary-color); line-height: 1.6; margin: 0 0 2rem 0; font-style: italic;">
-                            "Busque mucho tiempo un lugar que entendiera exactamente lo que queria para mi graduacion. Flore Designs no solo lo entendio, lo supero. Mi vestido fue perfecto."
-                        </blockquote>
-                        <div style="display: flex; align-items: center; gap: 1rem;">
-                            <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #00b894, var(--secondary-color)); flex-shrink: 0;"></div>
-                            <div>
-                                <strong style="font-family: var(--font-accent); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--primary-color); display: block;">Andrea Solis</strong>
-                                <span style="font-size: 0.8rem; color: var(--text-medium);">Graduación · 2024</span>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-                <button class="carrusel-btn anterior" aria-label="Comentario anterior">&#8592;</button>
-                <button class="carrusel-btn siguiente" aria-label="Siguiente comentario">&#8594;</button>
-                <div class="carrusel-indicadores"></div>
-
-            </div>
         </div>
     </section>
 
@@ -459,7 +398,7 @@ function filtrar(categoria, btnEl) {
                     </div>
 
                     <!-- ========================================
-                         ACTIVIDAD 7: CAPTCHA / Verificacion Humana
+                         A CAPTCHA / Verificacion Humana
                          Pregunta matematica generada aleatoriamente.
                          El formulario no se envia si falla.
                     ======================================== -->

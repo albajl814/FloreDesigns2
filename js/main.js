@@ -375,8 +375,8 @@ function initializeSampleData() {
     }
 
     // Crear pedidos de ejemplo si el usuario está logueado
-    if (auth.isLoggedIn()) {
-        const orders = orderSystem.getUserOrders(auth.getCurrentUser().id);
+    if (auth.estaAutenticado()) {
+        const orders = orderSystem.getUserOrders(auth.obtenerUsuario().id);
         if (orders.length === 0) {
             // Agregar algunos pedidos de ejemplo
             orderSystem.createOrder({
